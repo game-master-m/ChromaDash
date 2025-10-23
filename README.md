@@ -1,7 +1,7 @@
 # ChromaDash
 First Unity 2D Project
 
-
+```csharp
 🗂️ A. 코어 시스템 (Core Systems & Managers)  
 [Core]  
  |  
@@ -72,3 +72,4 @@ First Unity 2D Project
  |   └─ 💯 ScoreUI.cs  
  |  
  └─ (참고: UI 스크립트들은 Core나 Player를 직접 참조하지 않음)  
+ ```
