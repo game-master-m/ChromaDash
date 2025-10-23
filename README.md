@@ -1,8 +1,8 @@
 # ChromaDash
 First Unity 2D Project
 
-🗂️ A. 코어 시스템 (Core Systems & Managers)
-[Core]
+🗂️ A. 코어 시스템 (Core Systems & Managers)\n
+[Core]\n
  |- 📂 Managers (Singletons)
  |   |- GameManager.cs
  |   |- InputManager.cs
