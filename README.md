@@ -3,7 +3,6 @@ First Unity 2D Project
 
 🗂️ A. 코어 시스템 (Core Systems & Managers)
 [Core]
- |
  |- 📂 Managers (Singletons)
  |   |- GameManager.cs
  |   |- InputManager.cs
@@ -19,7 +18,6 @@ First Unity 2D Project
 
 ⚙️ B. 상태 기계 엔진 (HFSM Core Engine)
 [StateMachineCore]
- |
  |- 📜 IState.cs (Interface)
  |
  |- ⚙️ StateMachine.cs
@@ -56,7 +54,6 @@ First Unity 2D Project
 
 🌍 D. 월드 (World & Procedural Generation)
 [World]
- |
  |- 🗺️ LevelGenerator.cs
  |   └─ (Spawns) 📦 MapSegment.cs
  |
@@ -65,7 +62,6 @@ First Unity 2D Project
 
 🎨 E. UI (Event Subscribers)
 [UI]
- |
  |- (Subscribes to 📡 GameEvents)
  |   ├─ 📊 TimeGaugeUI.cs
  |   └─ 💯 ScoreUI.cs
