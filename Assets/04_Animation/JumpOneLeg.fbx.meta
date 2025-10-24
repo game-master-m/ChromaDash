@@ -36,8 +36,8 @@ ModelImporter:
       name: JumpOneLeg
       takeName: mixamo.com
       internalID: -203655887218126122
-      firstFrame: 16
-      lastFrame: 22
+      firstFrame: 29
+      lastFrame: 35
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

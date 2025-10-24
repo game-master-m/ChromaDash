@@ -12,11 +12,13 @@ public class AirState : PlayerState
     public override void Update()
     {
         base.Update();
-        player.ChromaDashCheck();
     }
     public override void FixedUpdate()
     {
         base.FixedUpdate();
+        player.ChromaDashCheck();
+        player.Anim.SetFloat(AnimHash.velocityYHash, player.Move.GetVelocityY());
+        player.Anim.SetBool(AnimHash.isChromaDashHash, player.IsChromaDash);
     }
     public override void Exit()
     {

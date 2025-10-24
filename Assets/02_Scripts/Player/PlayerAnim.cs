@@ -1,10 +1,16 @@
 using UnityEngine;
 public static class AnimHash
 {
+    //clip name
     public static readonly int runHash = Animator.StringToHash("Run");
     public static readonly int fastRunHash = Animator.StringToHash("FastRun");
     public static readonly int jumpOnGroundHash = Animator.StringToHash("JumpOnGround");
+    public static readonly int jumpInAirHash = Animator.StringToHash("JumpInAir");
     public static readonly int airIdledHash = Animator.StringToHash("AirIdle");
+
+    //Trigger name
+    public static readonly int velocityYHash = Animator.StringToHash("VelocityY");
+    public static readonly int isChromaDashHash = Animator.StringToHash("IsChromaDash");
 }
 public class PlayerAnim : MonoBehaviour
 {
@@ -67,5 +73,18 @@ public class PlayerAnim : MonoBehaviour
         skinnedMeshRenderer.GetPropertyBlock(propBlock);
         propBlock.SetColor(colorPropertyID, targetColor);
         skinnedMeshRenderer.SetPropertyBlock(propBlock);
+    }
+
+    public void SetFloat(int hash, float value)
+    {
+        animator.SetFloat(hash, value);
+    }
+    public void SetBool(int hash, bool value)
+    {
+        animator.SetBool(hash, value);
+    }
+    public void SetTrigger(int hash)
+    {
+        animator.SetTrigger(hash);
     }
 }

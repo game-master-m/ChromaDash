@@ -212,7 +212,7 @@ Camera:
   m_ShutterSpeed: 0.005
   m_Aperture: 16
   m_FocusDistance: 10
-  m_FocalLength: 50
+  m_FocalLength: 18.836226
   m_BladeCount: 5
   m_Curvature: {x: 2, y: 11}
   m_BarrelClipping: 0.25
@@ -227,8 +227,8 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 34
-  orthographic: 1
+  field of view: 65
+  orthographic: 0
   orthographic size: 5
   m_Depth: -1
   m_CullingMask:
@@ -337,9 +337,9 @@ MonoBehaviour:
   - {fileID: 2028577442}
   - {fileID: 723513055}
   rayLengthForGroundCheck: 0.1
-  rayLengthForChromaDash: 0.25
-  jumpForceFirst: 5
-  jumpForceContinue: 5
+  rayLengthForChromaDash: 0.65
+  jumpForceFirst: 5.2
+  jumpForceContinue: 5.2
   jumpForceHover: 1
   jumpFirceContinueDuration: 1.2
 --- !u!1001 &608177131
@@ -356,7 +356,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: dabacd93d9f74254ebc0e652b9b2ca10, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.486
+      value: -0.93
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: dabacd93d9f74254ebc0e652b9b2ca10, type: 3}
       propertyPath: m_LocalPosition.z
