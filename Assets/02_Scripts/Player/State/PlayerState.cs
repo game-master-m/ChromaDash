@@ -17,7 +17,10 @@ public abstract class PlayerState : IState
     }
 
     public virtual void Enter() { }
-    public virtual void Update() { }
+    public virtual void Update()
+    {
+        //chroma gauge 감소로직
+    }
     public virtual void FixedUpdate() { }
     public virtual void Exit() { }
 

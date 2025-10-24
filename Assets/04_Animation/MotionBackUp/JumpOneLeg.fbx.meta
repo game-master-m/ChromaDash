@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: e4cf5157c37654142b23c64293c6b8ce
+guid: 2a9777c4e99d1d345b903234b68beed0
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -36,8 +36,8 @@ ModelImporter:
       name: JumpOneLeg
       takeName: mixamo.com
       internalID: -203655887218126122
-      firstFrame: 16
-      lastFrame: 22
+      firstFrame: 0
+      lastFrame: 50
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
