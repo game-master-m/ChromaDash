@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -35,6 +36,7 @@ public class PlayerController : MonoBehaviour
     private bool isJump;
     public bool IsGround { get; private set; }
     public bool IsChromaDash { get; private set; }
+    public bool WasJumpedInAir { get; private set; } = false;
     private void Awake()
     {
         //ÄÄÆ÷³ÍÆ®
@@ -52,6 +54,7 @@ public class PlayerController : MonoBehaviour
         AirState = new AirState(this);
         JumpInAirState = new JumpInAirState(this, AirState);
         JumpOnGroundState = new JumpOnGroundState(this);
+
         AddTransitions();
 
         //
@@ -77,9 +80,20 @@ public class PlayerController : MonoBehaviour
         StateMachine.AddTransition(AirState, GroundState, () => IsGround);
         StateMachine.AddTransition(GroundState, AirState, () => !IsGround);
         StateMachine.AddTransition(GroundState, JumpOnGroundState, () => Input.IsJumpPressed);
-        StateMachine.AddTransition(JumpOnGroundState, AirState, () => JumpOnGroundState.IsChangeToAirState);
+        StateMachine.AddTransition(JumpOnGroundState, AirState, () => JumpOnGroundState.DoChangeStateJumpOnGroundToAirIdle);
+        StateMachine.AddTransition(JumpInAirState, AirState, () => JumpInAirState.DoChangeStateJumpInAirToAirIdle);
+        StateMachine.AddTransition(AirState, JumpInAirState, new Func<bool>(DoChangeStateAirToJump));
     }
 
+    public bool DoChangeStateAirToJump()
+    {
+        if (Input.IsJumpPressed && !WasJumpedInAir)
+        {
+            WasJumpedInAir = true;
+            return true;
+        }
+        else return false;
+    }
 
     private void GroundCheck()
     {
@@ -96,6 +110,7 @@ public class PlayerController : MonoBehaviour
             result |= isGrounds[i];
         }
         IsGround = result;
+        if (IsGround) WasJumpedInAir = false;
     }
     public void ChromaDashCheck()
     {
@@ -161,6 +176,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     #endregion
+
 
     private void OnDrawGizmos()
     {

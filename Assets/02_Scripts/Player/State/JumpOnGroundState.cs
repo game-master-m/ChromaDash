@@ -5,14 +5,14 @@ public class JumpOnGroundState : PlayerState
 {
     public JumpOnGroundState(PlayerController player, PlayerState parent = null) : base(player, parent) { }
 
-    private float clipLength = 0.2f;
+    private float clipLength = 0.3f;
     private bool isEndClip = false;
     private Coroutine delayCo;
 
     private float elapsedTime = 0.0f;
     private bool isPressing = false;
     private bool isPressingEnd = false;
-    public bool IsChangeToAirState { get; private set; } = false;
+    public bool DoChangeStateJumpOnGroundToAirIdle { get; private set; } = false;
     public override void Enter()
     {
         base.Enter();
@@ -36,7 +36,7 @@ public class JumpOnGroundState : PlayerState
         }
         if (!Managers.Input.IsJumpPressing && isEndClip || isEndClip && isPressingEnd)
         {
-            IsChangeToAirState = true;
+            DoChangeStateJumpOnGroundToAirIdle = true;
         }
 
     }
@@ -55,7 +55,7 @@ public class JumpOnGroundState : PlayerState
         isEndClip = false;
         isPressing = false;
         player.StopCoroutine(delayCo);
-        IsChangeToAirState = false;
+        DoChangeStateJumpOnGroundToAirIdle = false;
         isPressingEnd = false;
         elapsedTime = 0.0f;
     }
@@ -64,7 +64,7 @@ public class JumpOnGroundState : PlayerState
         yield return new WaitForSeconds(clipLength);
         isEndClip = true;
         yield return new WaitForSeconds(player.jumpFirceContinueDuration - clipLength);
-        IsChangeToAirState = true;
+        DoChangeStateJumpOnGroundToAirIdle = true;
     }
     IEnumerator DelayForCollisionComplexCo()
     {
