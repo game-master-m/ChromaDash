@@ -7,7 +7,8 @@ public class JumpOnGroundState : PlayerState
 
     private float clipLength = 0.3f;
     private bool isEndClip = false;
-    private Coroutine delayCo;
+    private Coroutine delayClipLenthCo;
+    private Coroutine delayForSafeCo;
 
     private float elapsedTime = 0.0f;
     private bool isPressing = false;
@@ -17,10 +18,10 @@ public class JumpOnGroundState : PlayerState
     {
         base.Enter();
         player.Anim.PlayAnim(AnimHash.jumpOnGroundHash);
-        player.StartCoroutine(DelayForCollisionComplexCo());
+        delayForSafeCo = player.StartCoroutine(DelayForCollisionComplexCo());
         player.Move.SetVelocityY(0.0f);
-        player.Move.AddForceImpulseY(player.jumpForceFirst);
-        delayCo = player.StartCoroutine(DelayClipLengthCo());
+        player.Move.AddForceImpulseY(player.JumpForceFirst);
+        delayClipLenthCo = player.StartCoroutine(DelayClipLengthCo());
     }
     public override void Update()
     {
@@ -45,8 +46,8 @@ public class JumpOnGroundState : PlayerState
         base.FixedUpdate();
         if (isPressing && !isPressingEnd)
         {
-            player.Move.AddForceLerpYEaseIn(player.jumpForceContinue,
-                player.jumpForceHover, player.jumpFirceContinueDuration, elapsedTime);
+            player.Move.AddForceYLerpYEaseIn(player.JumpForceContinue,
+                player.JumpForceHover, player.JumpFirceContinueDuration, elapsedTime);
         }
     }
     public override void Exit()
@@ -54,7 +55,8 @@ public class JumpOnGroundState : PlayerState
         base.Exit();
         isEndClip = false;
         isPressing = false;
-        player.StopCoroutine(delayCo);
+        player.StopCoroutine(delayClipLenthCo);
+        player.StopCoroutine(delayForSafeCo);
         DoChangeStateJumpOnGroundToAirIdle = false;
         isPressingEnd = false;
         elapsedTime = 0.0f;
@@ -63,7 +65,7 @@ public class JumpOnGroundState : PlayerState
     {
         yield return new WaitForSeconds(clipLength);
         isEndClip = true;
-        yield return new WaitForSeconds(player.jumpFirceContinueDuration - clipLength);
+        yield return new WaitForSeconds(player.JumpFirceContinueDuration - clipLength);
         DoChangeStateJumpOnGroundToAirIdle = true;
     }
     IEnumerator DelayForCollisionComplexCo()

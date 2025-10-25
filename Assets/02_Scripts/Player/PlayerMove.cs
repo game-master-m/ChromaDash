@@ -34,13 +34,19 @@ public class PlayerMove : MonoBehaviour
     {
         rb.AddForce(new Vector2(forceX, 0), ForceMode2D.Impulse);
     }
+    public void AddForceXLerpYEaseIn(float firstForce, float targetForce, float duration, float elapsedTime)
+    {
+        elapsedTime += Time.fixedDeltaTime;
+        float t = Mathf.Clamp01(elapsedTime / duration);
+        rb.AddForce(new Vector2(Mathf.Lerp(firstForce, targetForce, Mathf.Sin(t * Mathf.PI * 0.5f)), 0));
+    }
     public void AddForceLerpY(float firstForce, float targetForce, float duration, float elapsedTime)
     {
         elapsedTime += Time.fixedDeltaTime;
         float t = Mathf.Clamp01(elapsedTime / duration);
         rb.AddForce(new Vector2(0, Mathf.Lerp(firstForce, targetForce, t)));
     }
-    public void AddForceLerpYEaseIn(float firstForce, float targetForce, float duration, float elapsedTime)
+    public void AddForceYLerpYEaseIn(float firstForce, float targetForce, float duration, float elapsedTime)
     {
         elapsedTime += Time.fixedDeltaTime;
         float t = Mathf.Clamp01(elapsedTime / duration);

@@ -16,13 +16,14 @@ public class ObjectPool<T> : IPoolTypeCheckable where T : MonoBehaviour
     public ObjectPool(T prefab, int initCount, Transform parent = null)
     {
         this.prefab = prefab;
-        Type type = prefab.GetType();
-        Root = new GameObject($"{type}_pool").transform;
+        string name = prefab.name;
+        Root = new GameObject($"{name}_pool").transform;
         if (parent != null) Root.SetParent(parent, false);
 
         for (int i = 0; i < initCount; i++)
         {
             T inst = GameObject.Instantiate(prefab, Root);
+            inst.name = prefab.name;
             inst.gameObject.SetActive(false);
             poolQueue.Enqueue(inst);
         }
@@ -30,7 +31,7 @@ public class ObjectPool<T> : IPoolTypeCheckable where T : MonoBehaviour
 
     public T Dequeue()
     {
-        if (poolQueue.Count == 0) return GameObject.Instantiate(prefab, Root);
+        if (poolQueue.Count == 0) return null;
         T inst = poolQueue.Dequeue();
         inst.gameObject.SetActive(true);
         return inst;
