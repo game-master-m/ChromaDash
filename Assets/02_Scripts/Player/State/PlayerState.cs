@@ -1,3 +1,5 @@
+using UnityEditor.Timeline.Actions;
+
 public interface IState
 {
     void Enter();
@@ -8,6 +10,7 @@ public interface IState
 public abstract class PlayerState : IState
 {
     protected readonly PlayerController player;
+    protected float elapsedTimeBase = 0f;
     public PlayerState Parent { get; }
 
     public PlayerState(PlayerController player, PlayerState parent = null)
@@ -21,7 +24,13 @@ public abstract class PlayerState : IState
     {
         //chroma gauge 감소로직
     }
-    public virtual void FixedUpdate() { }
-    public virtual void Exit() { }
+    public virtual void FixedUpdate()
+    {
+
+    }
+    public virtual void Exit()
+    {
+
+    }
 
 }

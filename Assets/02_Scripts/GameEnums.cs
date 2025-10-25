@@ -1,12 +1,4 @@
-public enum EChromaColor
-{
-    Red, Blue, Green
-}
-public enum ELayerName
-{
-    Default, TransparentFX, IgnoreRaycast, Ground, Water, UI
-
-}
+#region static LayerManager
 public static class LayerManager
 {
     public static int GetLayerMask(ELayerName layerName)
@@ -22,4 +14,21 @@ public static class LayerManager
         }
         return result;
     }
+}
+#endregion
+public enum EChromaColor
+{
+    Red, Blue, Green
+}
+public enum ELayerName
+{
+    Default, TransparentFX, IgnoreRaycast, Ground, Water, UI
+}
+public enum EPatterDifficulty
+{
+    Easy, Medium, Hard
+}
+public enum ESegmentVericalType
+{
+    High, Middle, Low, Any
 }

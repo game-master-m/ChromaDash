@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -22,21 +23,33 @@ public class PlayerController : MonoBehaviour
 
     //Inspector 조절 변수
     [Header("GroundCheck")]
-    [SerializeField] float rayLengthForGroundCheck = 0.1f;
-    [SerializeField] float rayLengthForChromaDash = 0.25f;
+    [SerializeField] private float rayLengthForGroundCheck = 0.1f;
+    [SerializeField] private float rayLengthForChromaDash = 0.25f;
     [Header("물리값")]
-    [SerializeField] public float jumpForceFirst = 5.0f;
-    [SerializeField] public float jumpForceContinue = 3.0f;
-    [SerializeField] public float jumpForceHover = 1.0f;
-    [SerializeField] public float jumpFirceContinueDuration = 1.2f;
+    [SerializeField] private float runSpeed = 5.0f;
+    [SerializeField] private float chromaDashForce = 5.0f;
+    [SerializeField] private float chromaDashDruration = 1.0f;
+    [SerializeField] private float jumpForceFirst = 5.0f;
+    [SerializeField] private float jumpForceContinue = 3.0f;
+    [SerializeField] private float jumpForceHover = 1.0f;
+    [SerializeField] private float jumpFirceContinueDuration = 1.2f;
 
+    //인스펙터 조절변수 Getter
+    public float RunSpeed { get { return runSpeed; } }
+    public float ChromaDashForce { get { return chromaDashForce; } }
+    public float ChromaDashDruration { get { return chromaDashDruration; } }
+    public float JumpForceFirst { get { return jumpForceFirst; } }
+    public float JumpForceContinue { get { return jumpForceContinue; } }
+    public float JumpForceHover { get { return jumpForceHover; } }
+    public float JumpFirceContinueDuration { get { return jumpFirceContinueDuration; } }
 
     //멤버
-    private EChromaColor currentColor = EChromaColor.Red;
-    private bool isJump;
     public bool IsGround { get; private set; }
-    public bool IsChromaDash { get; private set; }
+    public bool CanChromaDashDistance { get; private set; }
+    public bool IsChromaDash { get; private set; } = false;
     public bool WasJumpedInAir { get; private set; } = false;
+
+    private EChromaColor currentColor = EChromaColor.Red;
     private void Awake()
     {
         //컴포넌트
@@ -62,6 +75,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         StateMachine.ChangeState(AirState);
+        Move.SetVelocityX(runSpeed);
     }
     void Update()
     {
@@ -73,18 +87,31 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         StateMachine.FixedUpdate();
+        RunSpeedControl();
     }
-    #region 감지들
     private void AddTransitions()
     {
         StateMachine.AddTransition(AirState, GroundState, () => IsGround);
         StateMachine.AddTransition(GroundState, AirState, () => !IsGround);
         StateMachine.AddTransition(GroundState, JumpOnGroundState, () => Input.IsJumpPressed);
         StateMachine.AddTransition(JumpOnGroundState, AirState, () => JumpOnGroundState.DoChangeStateJumpOnGroundToAirIdle);
+        StateMachine.AddTransition(JumpOnGroundState, JumpInAirState, () => Input.IsJumpPressed);
         StateMachine.AddTransition(JumpInAirState, AirState, () => JumpInAirState.DoChangeStateJumpInAirToAirIdle);
         StateMachine.AddTransition(AirState, JumpInAirState, new Func<bool>(DoChangeStateAirToJump));
     }
-
+    private void RunSpeedControl()
+    {
+        if (!IsChromaDash)
+        {
+            Move.SetVelocityX(runSpeed);
+        }
+        if (IsChromaDash)
+        {
+            IsChromaDash = false;
+            Move.AddForceImpulseX(chromaDashForce);
+        }
+    }
+    #region Transition Method
     public bool DoChangeStateAirToJump()
     {
         if (Input.IsJumpPressed && !WasJumpedInAir)
@@ -94,7 +121,9 @@ public class PlayerController : MonoBehaviour
         }
         else return false;
     }
+    #endregion
 
+    #region 감지들
     private void GroundCheck()
     {
         bool[] isGrounds = new bool[groundChecks.Length];
@@ -126,7 +155,7 @@ public class PlayerController : MonoBehaviour
             else isGrounds[i] = false;
             result |= isGrounds[i];
         }
-        IsChromaDash = result;
+        CanChromaDashDistance = result;
     }
     #endregion
 
@@ -177,7 +206,7 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
 
-
+    #region 기즈모들
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.gray;
@@ -205,4 +234,5 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    #endregion
 }

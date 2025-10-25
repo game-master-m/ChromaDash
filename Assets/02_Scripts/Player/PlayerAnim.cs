@@ -10,7 +10,7 @@ public static class AnimHash
 
     //Trigger name
     public static readonly int velocityYHash = Animator.StringToHash("VelocityY");
-    public static readonly int isChromaDashHash = Animator.StringToHash("IsChromaDash");
+    public static readonly int canChromaDashDistanceHash = Animator.StringToHash("CanChromaDashDistance");
 }
 public class PlayerAnim : MonoBehaviour
 {
@@ -18,10 +18,15 @@ public class PlayerAnim : MonoBehaviour
     private Animator animator;
 
     //component 참조
-    [SerializeField] private SkinnedMeshRenderer skinnedMeshRenderer;
+    [SerializeField] private SkinnedMeshRenderer surfaceSkinnedMeshRenderer;
+    [SerializeField] private SkinnedMeshRenderer jointSkinnedMeshRenderer;
     [SerializeField] private Material redMaterial;
     [SerializeField] private Material blueMaterial;
     [SerializeField] private Material greenMaterial;
+
+    [SerializeField] private Material jointPurpleMaterial;
+    [SerializeField] private Material jointOrangeMaterial;
+    [SerializeField] private Material jointYellowMaterial;
 
     //멤버
     private MaterialPropertyBlock propBlock;
@@ -34,7 +39,7 @@ public class PlayerAnim : MonoBehaviour
 
         propBlock = new MaterialPropertyBlock();
         colorPropertyID = Shader.PropertyToID("_BaseColor");
-        if (skinnedMeshRenderer == null)
+        if (surfaceSkinnedMeshRenderer == null)
         {
             Debug.Log("Renderer 없음!!!!!!!");
         }
@@ -50,29 +55,38 @@ public class PlayerAnim : MonoBehaviour
     }
     public void ChangeColor(EChromaColor newColor)
     {
-        if (skinnedMeshRenderer == null) return;
+        if (surfaceSkinnedMeshRenderer == null) return;
+        if (jointSkinnedMeshRenderer == null) return;
         if (propBlock == null) return;
 
         Color targetColor;
-
+        Color jointColor;
         switch (newColor)
         {
             case EChromaColor.Red:
                 targetColor = redMaterial.GetColor(colorPropertyID);
+                jointColor = jointYellowMaterial.GetColor(colorPropertyID);
                 break;
             case EChromaColor.Blue:
                 targetColor = blueMaterial.GetColor(colorPropertyID);
+                jointColor = jointOrangeMaterial.GetColor(colorPropertyID);
                 break;
             case EChromaColor.Green:
                 targetColor = greenMaterial.GetColor(colorPropertyID);
+                jointColor = jointPurpleMaterial.GetColor(colorPropertyID);
                 break;
             default:
                 targetColor = redMaterial.GetColor(colorPropertyID);
+                jointColor = jointYellowMaterial.GetColor(colorPropertyID);
                 break;
         }
-        skinnedMeshRenderer.GetPropertyBlock(propBlock);
+        surfaceSkinnedMeshRenderer.GetPropertyBlock(propBlock);
         propBlock.SetColor(colorPropertyID, targetColor);
-        skinnedMeshRenderer.SetPropertyBlock(propBlock);
+        surfaceSkinnedMeshRenderer.SetPropertyBlock(propBlock);
+
+        jointSkinnedMeshRenderer.GetPropertyBlock(propBlock);
+        propBlock.SetColor(colorPropertyID, jointColor);
+        jointSkinnedMeshRenderer.SetPropertyBlock(propBlock);
     }
 
     public void SetFloat(int hash, float value)
