@@ -28,7 +28,10 @@ public enum EPatterDifficulty
 {
     Easy, Medium, Hard
 }
-public enum ESegmentVericalType
+public enum EJumpDifficulty
 {
-    High, Middle, Low, Any
+    Easy,        // 기본 점프
+    Medium,      // 2단 점프
+    Hard,        // ~ 사이  
+    ChromaHard  // 크로마 부스트 + 2단 점프
 }

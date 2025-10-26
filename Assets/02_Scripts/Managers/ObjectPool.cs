@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -31,7 +30,12 @@ public class ObjectPool<T> : IPoolTypeCheckable where T : MonoBehaviour
 
     public T Dequeue()
     {
-        if (poolQueue.Count == 0) return null;
+        if (poolQueue.Count == 0)
+        {
+            T instance = GameObject.Instantiate(prefab, Root);
+            instance.name = prefab.name;
+            return instance;
+        }
         T inst = poolQueue.Dequeue();
         inst.gameObject.SetActive(true);
         return inst;

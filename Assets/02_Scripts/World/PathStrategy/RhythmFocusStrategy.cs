@@ -8,16 +8,16 @@ public class RhythmFocusStrategy : BasePathStrategy
 
         if (roll < 0.2f && themeData.hardSegments.Count > 0)
         {
-            return GetSegmentFromList(context, themeData.hardSegments);
+            return GetSegmentFromList(themeData.hardSegments);
         }
         if (0.2f <= roll && roll < 0.5f && themeData.mediumSegments.Count > 0)
         {
-            return GetSegmentFromList(context, themeData.mediumSegments);
+            return GetSegmentFromList(themeData.mediumSegments);
         }
         if (0.5f <= roll && roll < 0.7f && themeData.easySegments.Count > 0)
         {
-            return GetSegmentFromList(context, themeData.easySegments);
+            return GetSegmentFromList(themeData.easySegments);
         }
-        return GetSegmentFromList(context, themeData.rhythmSegments);
+        return GetSegmentFromList(themeData.rhythmSegments);
     }
 }
