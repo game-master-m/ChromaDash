@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour
     public bool IsChromaDash { get; private set; } = false;
     public bool WasJumpedInAir { get; private set; } = false;
 
-    private EChromaColor currentColor = EChromaColor.Red;
+    private EChromaColor eCurrentColor = EChromaColor.Red;
     private void Awake()
     {
         //컴포넌트
@@ -59,7 +59,7 @@ public class PlayerController : MonoBehaviour
         Input = Managers.Input;
 
         //초기 색상
-        currentColor = EChromaColor.Red;
+        eCurrentColor = EChromaColor.Red;
 
         //States
         StateMachine = new StateMachine();
@@ -162,45 +162,45 @@ public class PlayerController : MonoBehaviour
     #region 플레이어 색상변경 - 어디서든 적용을 위해 PlayerController에서 변경
     private void ChangeColorAsKeyLeft()
     {
-        switch (currentColor)
+        switch (eCurrentColor)
         {
             case EChromaColor.Red:
                 Anim.ChangeColor(EChromaColor.Green);
-                currentColor = EChromaColor.Green;
+                eCurrentColor = EChromaColor.Green;
                 break;
             case EChromaColor.Blue:
                 Anim.ChangeColor(EChromaColor.Red);
-                currentColor = EChromaColor.Red;
+                eCurrentColor = EChromaColor.Red;
                 break;
             case EChromaColor.Green:
                 Anim.ChangeColor(EChromaColor.Blue);
-                currentColor = EChromaColor.Blue;
+                eCurrentColor = EChromaColor.Blue;
                 break;
             default:
                 Anim.ChangeColor(EChromaColor.Red);
-                currentColor = EChromaColor.Red;
+                eCurrentColor = EChromaColor.Red;
                 break;
         }
     }
     private void ChangeColorAsKeyRight()
     {
-        switch (currentColor)
+        switch (eCurrentColor)
         {
             case EChromaColor.Red:
                 Anim.ChangeColor(EChromaColor.Blue);
-                currentColor = EChromaColor.Blue;
+                eCurrentColor = EChromaColor.Blue;
                 break;
             case EChromaColor.Blue:
                 Anim.ChangeColor(EChromaColor.Green);
-                currentColor = EChromaColor.Green;
+                eCurrentColor = EChromaColor.Green;
                 break;
             case EChromaColor.Green:
                 Anim.ChangeColor(EChromaColor.Red);
-                currentColor = EChromaColor.Red;
+                eCurrentColor = EChromaColor.Red;
                 break;
             default:
                 Anim.ChangeColor(EChromaColor.Red);
-                currentColor = EChromaColor.Red;
+                eCurrentColor = EChromaColor.Red;
                 break;
         }
     }
