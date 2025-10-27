@@ -45,7 +45,7 @@ public class PlayerController : MonoBehaviour
     public float JumpFirceContinueDuration { get { return jumpFirceContinueDuration; } }
 
     //멤버
-    public bool IsGround { get; private set; }
+    public bool IsGround { get; private set; } = false;
     public bool CanChromaDashDistance { get; private set; }
     public bool IsChromaDash { get; private set; } = false;
     public bool WasJumpedOnGround { get; set; } = false;
@@ -78,6 +78,8 @@ public class PlayerController : MonoBehaviour
     {
         StateMachine.ChangeState(AirState);
         Move.SetVelocityX(runSpeed);
+        //이벤트
+        //GameEvents.RaiseOnChromaColorChanged(eCurrentColor);
     }
     void Update()
     {
@@ -162,17 +164,16 @@ public class PlayerController : MonoBehaviour
     #region 감지들
     private void GroundCheck()
     {
-        bool[] isGrounds = new bool[groundChecks.Length];
         bool result = false;
         for (int i = 0; i < groundChecks.Length; i++)
         {
-            isGrounds[i] = false;
-            result = false;
             RaycastHit2D col = Physics2D.Raycast(groundChecks[i].position, Vector2.down, rayLengthForGroundCheck,
                 LayerManager.GetLayerMask(ELayerName.Ground));
-            if (col.collider != null) isGrounds[i] = true;
-            else isGrounds[i] = false;
-            result |= isGrounds[i];
+            if (col.collider != null)
+            {
+                result = true;
+                break;
+            }
         }
         IsGround = result;
         if (IsGround)
@@ -184,17 +185,16 @@ public class PlayerController : MonoBehaviour
     }
     public void ChromaDashCheck()
     {
-        bool[] isGrounds = new bool[groundChecks.Length];
         bool result = false;
         for (int i = 0; i < groundChecks.Length; i++)
         {
-            isGrounds[i] = false;
-            result = false;
             RaycastHit2D col = Physics2D.Raycast(groundChecks[i].position, Vector2.down, rayLengthForChromaDash,
                 LayerManager.GetLayerMask(ELayerName.Ground));
-            if (col.collider != null) isGrounds[i] = true;
-            else isGrounds[i] = false;
-            result |= isGrounds[i];
+            if (col.collider != null)
+            {
+                result = true;
+                break;
+            }
         }
         CanChromaDashDistance = result;
     }
@@ -206,73 +206,64 @@ public class PlayerController : MonoBehaviour
         switch (eCurrentColor)
         {
             case EChromaColor.Red:
-                Anim.ChangeColor(EChromaColor.Green);
                 eCurrentColor = EChromaColor.Green;
                 break;
             case EChromaColor.Blue:
-                Anim.ChangeColor(EChromaColor.Red);
                 eCurrentColor = EChromaColor.Red;
                 break;
             case EChromaColor.Green:
-                Anim.ChangeColor(EChromaColor.Blue);
                 eCurrentColor = EChromaColor.Blue;
                 break;
             default:
-                Anim.ChangeColor(EChromaColor.Red);
                 eCurrentColor = EChromaColor.Red;
                 break;
         }
+        Anim.ChangeColor(eCurrentColor);
+        GameEvents.RaiseOnChromaColorChanged(eCurrentColor);
     }
     private void ChangeColorAsKeyRight()
     {
         switch (eCurrentColor)
         {
             case EChromaColor.Red:
-                Anim.ChangeColor(EChromaColor.Blue);
                 eCurrentColor = EChromaColor.Blue;
                 break;
             case EChromaColor.Blue:
-                Anim.ChangeColor(EChromaColor.Green);
                 eCurrentColor = EChromaColor.Green;
                 break;
             case EChromaColor.Green:
-                Anim.ChangeColor(EChromaColor.Red);
                 eCurrentColor = EChromaColor.Red;
                 break;
             default:
-                Anim.ChangeColor(EChromaColor.Red);
                 eCurrentColor = EChromaColor.Red;
                 break;
         }
+        Anim.ChangeColor(eCurrentColor);
+        GameEvents.RaiseOnChromaColorChanged(eCurrentColor);
     }
     #endregion
 
     #region 기즈모들
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.gray;
+
         foreach (Transform groundCheck in groundChecks)
         {
             Gizmos.DrawLine(groundCheck.position, groundCheck.position + new Vector3(0, -rayLengthForChromaDash, 0));
             RaycastHit2D col = Physics2D.Raycast(groundCheck.position, Vector2.down, rayLengthForChromaDash,
                 LayerManager.GetLayerMask(ELayerName.Ground));
-            if (col.collider != null)
-            {
-                Gizmos.color = Color.red;
-                Gizmos.DrawLine(groundCheck.position, groundCheck.position + new Vector3(0, -rayLengthForChromaDash, 0));
-            }
+            if (col.collider != null) Gizmos.color = Color.red;
+            else Gizmos.color = Color.gray;
+            Gizmos.DrawLine(groundCheck.position, groundCheck.position + new Vector3(0, -rayLengthForChromaDash, 0));
         }
-        Gizmos.color = Color.yellow;
+
         foreach (Transform groundCheck in groundChecks)
         {
-            Gizmos.DrawLine(groundCheck.position, groundCheck.position + new Vector3(0, -rayLengthForGroundCheck, 0));
             RaycastHit2D col = Physics2D.Raycast(groundCheck.position, Vector2.down, rayLengthForGroundCheck,
                 LayerManager.GetLayerMask(ELayerName.Ground));
-            if (col.collider != null)
-            {
-                Gizmos.color = Color.blue;
-                Gizmos.DrawLine(groundCheck.position, groundCheck.position + new Vector3(0, -rayLengthForGroundCheck, 0));
-            }
+            if (col.collider != null) Gizmos.color = Color.blue;
+            else Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(groundCheck.position, groundCheck.position + new Vector3(0, -rayLengthForGroundCheck, 0));
         }
     }
     #endregion
