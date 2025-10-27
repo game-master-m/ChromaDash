@@ -19,7 +19,7 @@ public class AirState : PlayerState
         player.ChromaDashCheck();
 
         player.Anim.SetFloat(AnimHash.velocityYHash, player.Move.GetVelocityY());
-        player.Anim.SetBool(AnimHash.canChromaDashDistanceHash, player.CanChromaDashDistance);
+        player.Anim.SetBool(AnimHash.canChromaDashDistanceHash, player.IsInChromaDashDistance);
     }
     public override void Exit()
     {

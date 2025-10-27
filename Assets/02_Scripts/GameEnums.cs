@@ -18,7 +18,7 @@ public static class LayerManager
 #endregion
 public enum EChromaColor
 {
-    Red, Blue, Green
+    None, Red, Blue, Green
 }
 public enum ELayerName
 {
