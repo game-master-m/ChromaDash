@@ -72,7 +72,7 @@ public class LevelGenerator : MonoBehaviour
         foreach (MapSegment prefab in currentTheme.GetAllUniquePrefabs())
         {
 
-            if (prefab != null) Managers.Pool.CreatePool(prefab, initCount, this.transform);
+            if (prefab != null) Managers.Pool.CreatePool(prefab, initCount, Managers.Pool.transform);
         }
     }
     private void SpawnStartSegment()
@@ -246,5 +246,18 @@ public class LevelGenerator : MonoBehaviour
         {
             currentStrategy = mediumStrategy;
         }
+    }
+
+    //ÆÄ±«µÉ ¶§ Ç® ¹Ý³³
+    private void OnDestroy()
+    {
+        List<MapSegment> segments = new List<MapSegment>(activeSegments);
+        foreach (MapSegment segment in segments)
+        {
+            DespawnSegment(segment);
+        }
+        activeSegments.Clear();
+        openConnectors.Clear();
+        occupiedGridCells.Clear();
     }
 }

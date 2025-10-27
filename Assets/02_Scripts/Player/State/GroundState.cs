@@ -8,6 +8,7 @@ public class GroundState : PlayerState
     {
         base.Enter();
         player.Anim.CrossFade(AnimHash.runHash, 0.3f);
+
     }
     public override void Update()
     {

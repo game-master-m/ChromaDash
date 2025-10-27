@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,9 +12,9 @@ public class PlayerController : MonoBehaviour
     //state
     public StateMachine StateMachine { get; private set; }
     public GroundState GroundState { get; private set; }
+    public JumpOnGroundState JumpOnGroundState { get; private set; }
     public AirState AirState { get; private set; }
     public JumpInAirState JumpInAirState { get; private set; }
-    public JumpOnGroundState JumpOnGroundState { get; private set; }
 
     //input
     public InputManager Input { get; private set; }
@@ -47,7 +48,9 @@ public class PlayerController : MonoBehaviour
     public bool IsGround { get; private set; }
     public bool CanChromaDashDistance { get; private set; }
     public bool IsChromaDash { get; private set; } = false;
+    public bool WasJumpedOnGround { get; set; } = false;
     public bool WasJumpedInAir { get; private set; } = false;
+    public bool WasSecondJumpedInAir { get; private set; } = false;
 
     private EChromaColor eCurrentColor = EChromaColor.Red;
     private void Awake()
@@ -64,10 +67,9 @@ public class PlayerController : MonoBehaviour
         //States
         StateMachine = new StateMachine();
         GroundState = new GroundState(this);
+        JumpOnGroundState = new JumpOnGroundState(this);
         AirState = new AirState(this);
         JumpInAirState = new JumpInAirState(this, AirState);
-        JumpOnGroundState = new JumpOnGroundState(this);
-
         AddTransitions();
 
         //
@@ -83,6 +85,10 @@ public class PlayerController : MonoBehaviour
         StateMachine.Update();
         if (Input.IsColorChangeLeftPressed) ChangeColorAsKeyLeft();
         if (Input.IsColorChangeRightPressed) ChangeColorAsKeyRight();
+        if (Input.IsJumpPressed && IsGround) WasJumpedOnGround = true;
+
+        //test용 reLoad
+        if (Input.IsReLoadRPressed) SceneManager.LoadScene(0);
     }
     private void FixedUpdate()
     {
@@ -95,10 +101,51 @@ public class PlayerController : MonoBehaviour
         StateMachine.AddTransition(GroundState, AirState, () => !IsGround);
         StateMachine.AddTransition(GroundState, JumpOnGroundState, () => Input.IsJumpPressed);
         StateMachine.AddTransition(JumpOnGroundState, AirState, () => JumpOnGroundState.DoChangeStateJumpOnGroundToAirIdle);
-        StateMachine.AddTransition(JumpOnGroundState, JumpInAirState, () => Input.IsJumpPressed);
+        StateMachine.AddTransition(JumpOnGroundState, JumpInAirState, new Func<bool>(DoChangeStateJumpOnGroundToJump));
         StateMachine.AddTransition(JumpInAirState, AirState, () => JumpInAirState.DoChangeStateJumpInAirToAirIdle);
         StateMachine.AddTransition(AirState, JumpInAirState, new Func<bool>(DoChangeStateAirToJump));
+
+
     }
+    #region Transition Method
+    public bool DoChangeStateJumpOnGroundToJump()
+    {
+        if (Input.IsJumpPressed)
+        {
+            WasJumpedInAir = true;
+            return true;
+        }
+        else return false;
+    }
+    public bool DoChangeStateAirToJump()
+    {
+        if (WasJumpedOnGround)
+        {
+            if (Input.IsJumpPressed && !WasJumpedInAir)
+            {
+                WasJumpedInAir = true;
+                return true;
+            }
+            else return false;
+        }
+        else
+        {
+            if (Input.IsJumpPressed && !WasJumpedInAir && !WasSecondJumpedInAir)
+            {
+                WasJumpedInAir = true;
+                return true;
+            }
+            else if (Input.IsJumpPressed && WasJumpedInAir && !WasSecondJumpedInAir)
+            {
+                Debug.Log("공중 2단 점프!");
+                WasSecondJumpedInAir = true;
+                return true;
+            }
+            else return false;
+        }
+    }
+
+    #endregion
     private void RunSpeedControl()
     {
         if (!IsChromaDash)
@@ -111,17 +158,6 @@ public class PlayerController : MonoBehaviour
             Move.AddForceImpulseX(chromaDashForce);
         }
     }
-    #region Transition Method
-    public bool DoChangeStateAirToJump()
-    {
-        if (Input.IsJumpPressed && !WasJumpedInAir)
-        {
-            WasJumpedInAir = true;
-            return true;
-        }
-        else return false;
-    }
-    #endregion
 
     #region 감지들
     private void GroundCheck()
@@ -139,7 +175,12 @@ public class PlayerController : MonoBehaviour
             result |= isGrounds[i];
         }
         IsGround = result;
-        if (IsGround) WasJumpedInAir = false;
+        if (IsGround)
+        {
+            //점프 조건 초기화!
+            WasJumpedInAir = false;
+            WasSecondJumpedInAir = false;
+        }
     }
     public void ChromaDashCheck()
     {

@@ -13,11 +13,12 @@ public class JumpInAirState : PlayerState
     private float elapsedTime = 0.0f;
     private bool isPressing = false;
     private bool isPressingEnd = false;
+    //private bool canJumpAgain = true;
     public bool DoChangeStateJumpInAirToAirIdle { get; private set; } = false;
     public override void Enter()
     {
         base.Enter();
-        player.Anim.PlayAnim(AnimHash.jumpInAirHash);
+        player.Anim.CrossFade(AnimHash.jumpOnGroundHash, 0.1f);
         delayForSafeCo = player.StartCoroutine(DelayForCollisionComplexCo());
         player.Move.SetVelocityY(0.0f);
         player.Move.AddForceImpulseY(player.JumpForceFirst);
@@ -26,6 +27,7 @@ public class JumpInAirState : PlayerState
     public override void Update()
     {
         base.Update();
+
         if (Managers.Input.IsJumpPressing)
         {
             isPressing = true;
