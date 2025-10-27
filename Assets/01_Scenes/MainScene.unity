@@ -361,7 +361,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
+  m_LinearDrag: 0.1
   m_AngularDrag: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
@@ -423,15 +423,17 @@ MonoBehaviour:
   - {fileID: 1107324517}
   - {fileID: 2028577442}
   - {fileID: 723513055}
+  intoGroundDelay: 0.15
   rayLengthForGroundCheck: 0.1
-  rayLengthForChromaDash: 0.65
-  runSpeed: 5
-  chromaDashForce: 5
+  rayLengthForChromaDash: 0.25
+  runSpeed: 0
+  chromaDashForce: 2
   chromaDashDruration: 1
   jumpForceFirst: 5.2
   jumpForceContinue: 5.2
   jumpForceHover: 1
   jumpFirceContinueDuration: 1.2
+  chromaDashTime: 1
 --- !u!4 &543847441 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: dabacd93d9f74254ebc0e652b9b2ca10, type: 3}
@@ -572,7 +574,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: dabacd93d9f74254ebc0e652b9b2ca10, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: dabacd93d9f74254ebc0e652b9b2ca10, type: 3}
       propertyPath: m_LocalPosition.y
@@ -777,6 +779,7 @@ GameObject:
   - component: {fileID: 685510786}
   - component: {fileID: 685510785}
   - component: {fileID: 685510784}
+  - component: {fileID: 685510787}
   m_Layer: 3
   m_Name: Ground
   m_TagString: Untagged
@@ -896,6 +899,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &685510787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 685510783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 793afc0259ab29e4ca5fa568cd6d3282, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eColorForChromaDash: 1
 --- !u!1 &697473553
 GameObject:
   m_ObjectHideFlags: 0
@@ -1096,7 +1112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8d43b779820c1248b21cb311f0983fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentImage: {fileID: 0}
+  currentImage: {fileID: 989413848}
   redSprite: {fileID: 893452534743736695, guid: bc5c9842ed20fb14eab8fca166a60f01, type: 3}
   blueSprite: {fileID: 6085736671657559080, guid: 6119f52e1327e7142ace21eddd69fe50, type: 3}
   greenSprite: {fileID: -7356751130132267667, guid: d3b1f9c6b58d4f4469dd6c630924eff7, type: 3}
@@ -1424,6 +1440,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   groundChecks: []
+  intoGroundDelay: 0.2
   rayLengthForGroundCheck: 0.1
   rayLengthForChromaDash: 0.25
   runSpeed: 5
@@ -1433,6 +1450,7 @@ MonoBehaviour:
   jumpForceContinue: 3
   jumpForceHover: 1
   jumpFirceContinueDuration: 1.2
+  chromaDashTime: 1
 --- !u!114 &1292660504
 MonoBehaviour:
   m_ObjectHideFlags: 0

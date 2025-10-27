@@ -7,7 +7,7 @@ public class GroundState : PlayerState
     public override void Enter()
     {
         base.Enter();
-        player.Anim.CrossFade(AnimHash.runHash, 0.3f);
+        player.Anim.CrossFade(AnimHash.runHash, 0.0f);
 
     }
     public override void Update()

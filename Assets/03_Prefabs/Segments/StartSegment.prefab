@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 5609475866019570841}
   - component: {fileID: 2419935655582580736}
   - component: {fileID: 4754122945790271723}
+  - component: {fileID: 2309844697021489308}
   m_Layer: 3
   m_Name: RedBlockBasic
   m_TagString: Red
@@ -244,6 +245,19 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 3.1, y: 1.2}
   m_Direction: 1
+--- !u!114 &2309844697021489308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5953807041745811771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 793afc0259ab29e4ca5fa568cd6d3282, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eColorForChromaDash: 1
 --- !u!1 &8212271171922217568
 GameObject:
   m_ObjectHideFlags: 0
