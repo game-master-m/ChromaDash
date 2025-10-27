@@ -13,6 +13,7 @@ public class JumpOnGroundState : PlayerState
     private float elapsedTime = 0.0f;
     private bool isPressing = false;
     private bool isPressingEnd = false;
+
     public bool DoChangeStateJumpOnGroundToAirIdle { get; private set; } = false;
     public override void Enter()
     {
@@ -22,6 +23,8 @@ public class JumpOnGroundState : PlayerState
         player.Move.SetVelocityY(0.0f);
         player.Move.AddForceImpulseY(player.JumpForceFirst);
         delayClipLenthCo = player.StartCoroutine(DelayClipLengthCo());
+
+
     }
     public override void Update()
     {

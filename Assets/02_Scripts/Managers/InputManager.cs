@@ -12,6 +12,7 @@ public class InputManager : MonoBehaviour
     public bool IsQuickSlot2Pressed { get; private set; }
     public bool IsQuickSlot3Pressed { get; private set; }
     public bool IsPausePressed { get; private set; }
+    public bool IsReLoadRPressed { get; private set; }
     private void Awake()
     {
         if (Instance == null)
@@ -33,5 +34,7 @@ public class InputManager : MonoBehaviour
         IsQuickSlot1Pressed = Input.GetKeyDown(KeyCode.Alpha1);
         IsQuickSlot2Pressed = Input.GetKeyDown(KeyCode.Alpha2);
         IsQuickSlot3Pressed = Input.GetKeyDown(KeyCode.Alpha3);
+
+        IsReLoadRPressed = Input.GetKeyDown(KeyCode.R);
     }
 }
