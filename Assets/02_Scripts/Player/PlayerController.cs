@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     private JumpInAirState jumpInAirState;
     private ReadyChromaDashState readyChromaDashState;
     private ChromaDashState chromaDashState;
+    private HurtState hurtState;
     //input
     public InputManager Input { get; private set; }
 
@@ -30,25 +31,33 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float rayLengthForChromaDash = 0.25f;
     [Header("물리값")]
     [SerializeField] private float runSpeed = 5.0f;
+    [SerializeField] private float hurtSlowSpeed = 2.0f;
     [SerializeField] private float chromaDashForce = 5.0f;
-    [SerializeField] private float chromaDashDruration = 1.0f;
     [SerializeField] private float jumpForceFirst = 5.0f;
     [SerializeField] private float jumpForceContinue = 3.0f;
     [SerializeField] private float jumpForceHover = 1.0f;
     [SerializeField] private float jumpFirceContinueDuration = 1.2f;
     [Header("크로마대쉬 관련")]
     [SerializeField] private float chromaDashTime = 1.0f;
+    [SerializeField] private float chromaToRunTransitionTValue = 5.0f;
+    [SerializeField] private float hurtToRunTransitionTValue = 2.0f;
+    [Header("게이지 관련")]
+    [SerializeField] private float chromaDashSuccessRewardAmount = 5.0f;
+    [SerializeField] private float penaltyColorNoMatchAmount = 10.0f;
+
+
     //인스펙터 조절변수 Getter
-    public float RunSpeed { get { return runSpeed; } }
+    public float ChromaDashSuccesRewardAmount { get { return chromaDashSuccessRewardAmount; } }
+    public float PenaltyColorNoMatchAmount { get { return penaltyColorNoMatchAmount; } }
+    public float HurtSlowSpeed { get { return hurtSlowSpeed; } }
     public float ChromaDashForce { get { return chromaDashForce; } }
-    public float ChromaDashDruration { get { return chromaDashDruration; } }
     public float JumpForceFirst { get { return jumpForceFirst; } }
     public float JumpForceContinue { get { return jumpForceContinue; } }
     public float JumpForceHover { get { return jumpForceHover; } }
     public float JumpFirceContinueDuration { get { return jumpFirceContinueDuration; } }
     public float ChromaDashTime { get { return chromaDashTime; } }
+
     //멤버
-    public bool CanChromaDashReady { get; set; } = false;
     public bool IsChromaDash { get; set; } = false;
     public bool IsGround { get; private set; } = false;
     public bool IsDelayedGround { get; private set; } = false;
@@ -60,6 +69,7 @@ public class PlayerController : MonoBehaviour
     public EChromaColor ECurrentColor { get; private set; } = EChromaColor.Red;
 
     private bool isChromaDashBetweenGroundToDelayed = false;
+
     private void Awake()
     {
         //컴포넌트
@@ -79,9 +89,9 @@ public class PlayerController : MonoBehaviour
         jumpInAirState = new JumpInAirState(this, airState);
         readyChromaDashState = new ReadyChromaDashState(this, airState);
         chromaDashState = new ChromaDashState(this);
+        hurtState = new HurtState(this);
 
         AddTransitions();
-
         //
     }
     private void Start()
@@ -96,7 +106,7 @@ public class PlayerController : MonoBehaviour
         StateMachine.Update();
         if (Input.IsColorChangeLeftPressed) ChangeColorAsKeyLeft();
         if (Input.IsColorChangeRightPressed) ChangeColorAsKeyRight();
-        if (Input.IsJumpPressed && IsGround) WasJumpedOnGround = true;
+
 
         //test용 reLoad
         if (Input.IsReLoadRPressed) SceneManager.LoadScene(0);
@@ -108,18 +118,27 @@ public class PlayerController : MonoBehaviour
     }
     private void AddTransitions()
     {
-        StateMachine.AddTransition(airState, groundState, () => IsDelayedGround);
+        StateMachine.AddTransition(airState, groundState,
+            () => (IsGround && !(StateMachine.CurrentState is ReadyChromaDashState) && (ECurrentColor == EDetectedColorFromSeg)) || IsDelayedGround);
         StateMachine.AddTransition(groundState, airState, () => !IsGround);
         StateMachine.AddTransition(groundState, jumpOnGroundState, () => Input.IsJumpPressed);
         StateMachine.AddTransition(jumpOnGroundState, airState, () => jumpOnGroundState.DoChangeStateJumpOnGroundToAirIdle);
         StateMachine.AddTransition(jumpOnGroundState, jumpInAirState, new Func<bool>(DoChangeStateJumpOnGroundToJump));
         StateMachine.AddTransition(jumpInAirState, airState, () => jumpInAirState.DoChangeStateJumpInAirToAirIdle);
         StateMachine.AddTransition(airState, jumpInAirState, new Func<bool>(DoChangeStateAirToJump));
-        StateMachine.AddTransition(airState, readyChromaDashState, () => IsInChromaDashDistance
-            && ECurrentColor != EDetectedColorFromSeg && EDetectedColorFromSeg != EChromaColor.None);
+        StateMachine.AddTransition(airState, readyChromaDashState, () => !(StateMachine.CurrentState is ReadyChromaDashState)
+                && IsInChromaDashDistance && ECurrentColor != EDetectedColorFromSeg && EDetectedColorFromSeg != EChromaColor.None);
+
         StateMachine.AddTransition(readyChromaDashState, chromaDashState,
-            () => CanChromaDashReady && (IsDelayedGround || IsGround || isChromaDashBetweenGroundToDelayed));
+            () => readyChromaDashState.CanChromaDashReady && (IsDelayedGround || IsGround || isChromaDashBetweenGroundToDelayed));
         StateMachine.AddTransition(chromaDashState, groundState, () => !IsChromaDash);
+        StateMachine.AddTransition(chromaDashState, jumpOnGroundState, () => Input.IsJumpPressed && IsGround);
+        StateMachine.AddTransition(chromaDashState, jumpInAirState, () => Input.IsJumpPressed && !IsGround);
+        StateMachine.AddTransition(hurtState, airState, () => hurtState.IsHurtEnd);
+
+        //Any
+        StateMachine.AddAnyTransition(hurtState,
+            () => IsDelayedGround && ECurrentColor != EDetectedColorFromSeg && !(StateMachine.CurrentState is HurtState));
     }
     #region Transition Method
     public bool DoChangeStateJumpOnGroundToJump()
@@ -151,7 +170,6 @@ public class PlayerController : MonoBehaviour
             }
             else if (Input.IsJumpPressed && WasJumpedInAir && !WasSecondJumpedInAir)
             {
-                Debug.Log("공중 2단 점프!");
                 WasSecondJumpedInAir = true;
                 return true;
             }
@@ -162,12 +180,21 @@ public class PlayerController : MonoBehaviour
     #endregion
     private void RunSpeedControl()
     {
-        if (!IsChromaDash)
+        if (hurtState.IsHurtSlow)
         {
-            Move.SetVelocityX(runSpeed);
+            Move.VelocityXLerpEaseIn(Move.GetVelocityX(), runSpeed, hurtToRunTransitionTValue * Time.fixedDeltaTime);
+            if (Move.GetVelocityX() > runSpeed - 0.1f) hurtState.IsHurtSlow = false;
         }
-        if (IsChromaDash)
+        else
         {
+            if (!IsChromaDash)
+            {
+                if (Move.GetVelocityX() > runSpeed + 0.1f)
+                {
+                    Move.VelocityXLerpEaseIn(Move.GetVelocityX(), runSpeed, chromaToRunTransitionTValue * Time.fixedDeltaTime);
+                }
+                else { Move.SetVelocityX(runSpeed); }
+            }
         }
     }
     IEnumerator IntoGroundDelay(float t)
@@ -200,16 +227,22 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(IntoGroundDelay(intoGroundDelay));
         }
         IsGround = result;
-        if (IsDelayedGround)
+        if (IsGround && !readyChromaDashState.CanChromaDashReady && (ECurrentColor == EDetectedColorFromSeg))
         {
-            //크로마 감지들 초기화
-            IsInChromaDashDistance = false;
-            EDetectedColorFromSeg = EChromaColor.None;
             //점프 조건 초기화!
             WasJumpedInAir = false;
             WasSecondJumpedInAir = false;
         }
+        if (IsDelayedGround)
+        {
+            //점프 조건 초기화!
+            WasJumpedInAir = false;
+            WasSecondJumpedInAir = false;
+            //크로마 감지들 초기화
+            IsInChromaDashDistance = false;
+        }
     }
+    //AirState FixedUpdate()에서 검사
     public void ChromaDashCheck()
     {
         bool result = false;
@@ -255,7 +288,7 @@ public class PlayerController : MonoBehaviour
         }
         Anim.ChangeColor(ECurrentColor);
         GameEvents.RaiseOnChromaColorChanged(ECurrentColor);
-        if (CanChromaDashReady && IsGround && !IsDelayedGround && ECurrentColor == EDetectedColorFromSeg)
+        if (readyChromaDashState.CanChromaDashReady && IsGround && !IsDelayedGround && ECurrentColor == EDetectedColorFromSeg)
         {
             isChromaDashBetweenGroundToDelayed = true;
         }

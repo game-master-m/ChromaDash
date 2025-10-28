@@ -7,7 +7,9 @@ public class AirState : PlayerState
     public override void Enter()
     {
         base.Enter();
-        player.Anim.CrossFade(AnimHash.airIdledHash, 0.2f);
+        player.ChromaDashCheck();
+        Debug.Log("Air State Enter");
+        player.Anim.CrossFade(AnimHash.airIdleHash, 0.2f);
     }
     public override void Update()
     {
@@ -24,6 +26,6 @@ public class AirState : PlayerState
     public override void Exit()
     {
         base.Exit();
-        if (player.IsGround) player.WasJumpedOnGround = false;
+
     }
 }

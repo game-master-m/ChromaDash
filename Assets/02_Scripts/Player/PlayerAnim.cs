@@ -5,7 +5,8 @@ public static class AnimHash
     public static readonly int runHash = Animator.StringToHash("Run");
     public static readonly int fastRunHash = Animator.StringToHash("FastRun");
     public static readonly int jumpOnGroundHash = Animator.StringToHash("JumpOnGround");
-    public static readonly int airIdledHash = Animator.StringToHash("AirIdle");
+    public static readonly int airIdleHash = Animator.StringToHash("AirIdle");
+    public static readonly int hurtHash = Animator.StringToHash("Hurt");
 
 
     //Trigger name

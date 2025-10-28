@@ -6,7 +6,9 @@ public class GroundState : PlayerState
 
     public override void Enter()
     {
+        Debug.Log("Ground State Enter");
         base.Enter();
+        player.WasJumpedOnGround = false;
         player.Anim.CrossFade(AnimHash.runHash, 0.0f);
 
     }

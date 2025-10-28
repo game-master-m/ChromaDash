@@ -17,6 +17,7 @@ public class JumpInAirState : PlayerState
     public bool DoChangeStateJumpInAirToAirIdle { get; private set; } = false;
     public override void Enter()
     {
+        Debug.Log("jumped In Air State Enter");
         base.Enter();
         player.Anim.CrossFade(AnimHash.jumpOnGroundHash, 0.1f);
         delayForSafeCo = player.StartCoroutine(DelayForCollisionComplexCo());
