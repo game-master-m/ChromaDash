@@ -68,10 +68,17 @@ public class PlayerMove : MonoBehaviour
     {
         elapsedTime += Time.fixedDeltaTime;
         float t = Mathf.Clamp01(elapsedTime / duration);
-        rb.velocity = (new Vector2(rb.velocity.x, Mathf.Lerp(OriginalVel, targetVel, Mathf.Sin(t * Mathf.PI * 0.5f))));
+        rb.velocity = new Vector2(rb.velocity.x, Mathf.Lerp(OriginalVel, targetVel, Mathf.Sin(t * Mathf.PI * 0.5f)));
+    }
+    public void VelocityXLerpEaseIn(float currentVel, float targetVel, float t)
+    {
+        rb.velocity = new Vector2(Mathf.Lerp(currentVel, targetVel, t), rb.velocity.y);
     }
 
-
+    public float GetVelocityX()
+    {
+        return rb.velocity.x;
+    }
     public float GetVelocityY()
     {
         return rb.velocity.y;

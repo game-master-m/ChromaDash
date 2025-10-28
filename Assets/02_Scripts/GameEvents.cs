@@ -15,4 +15,17 @@ public static class GameEvents
     {
         OnChromaColorChanged?.Invoke(chromaColor);
     }
+
+    //크로마대쉬 성공
+    public static event Action<float> OnChromaDashSuccessed;
+    public static void RaisedOnChromaDashSuccessed(float reward)
+    {
+        OnChromaDashSuccessed?.Invoke(reward);
+    }
+    //페널티 (땅과 색상 불일치)
+    public static event Action<float> OnPenaltyWhenNoColorMatch;
+    public static void RaisedOnPenaltyWhenNoColorMatch(float amount)
+    {
+        OnPenaltyWhenNoColorMatch?.Invoke(amount);
+    }
 }

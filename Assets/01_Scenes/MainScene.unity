@@ -364,7 +364,7 @@ Rigidbody2D:
   m_LinearDrag: 0.1
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 2255f4543679aaa4c8c948db132d860e, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -427,13 +427,17 @@ MonoBehaviour:
   rayLengthForGroundCheck: 0.1
   rayLengthForChromaDash: 0.25
   runSpeed: 0
-  chromaDashForce: 2
-  chromaDashDruration: 1
+  hurtSlowSpeed: 2
+  chromaDashForce: 5
   jumpForceFirst: 5.2
   jumpForceContinue: 5.2
   jumpForceHover: 1
   jumpFirceContinueDuration: 1.2
   chromaDashTime: 1
+  chromaToRunTransitionTValue: 5
+  hurtToRunTransitionTValue: 2
+  chromaDashSuccessRewardAmount: 5
+  penaltyColorNoMatchAmount: 10
 --- !u!4 &543847441 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: dabacd93d9f74254ebc0e652b9b2ca10, type: 3}
@@ -1444,13 +1448,17 @@ MonoBehaviour:
   rayLengthForGroundCheck: 0.1
   rayLengthForChromaDash: 0.25
   runSpeed: 5
+  hurtSlowSpeed: 2
   chromaDashForce: 10
-  chromaDashDruration: 1
   jumpForceFirst: 5
   jumpForceContinue: 3
   jumpForceHover: 1
   jumpFirceContinueDuration: 1.2
   chromaDashTime: 1
+  chromaToRunTransitionTValue: 5
+  hurtToRunTransitionTValue: 2
+  chromaDashSuccessRewardAmount: 5
+  penaltyColorNoMatchAmount: 10
 --- !u!114 &1292660504
 MonoBehaviour:
   m_ObjectHideFlags: 0

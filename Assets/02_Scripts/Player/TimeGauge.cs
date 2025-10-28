@@ -7,6 +7,7 @@ public class TimeGauge : MonoBehaviour
     [SerializeField] private float maxGauge = 100f;
     [SerializeField] private float gaugeCostPerSec = 1.0f;
     [SerializeField] private float gaugeUpdateCool = 0.5f;
+
     public float CurrentGauge { get; private set; }
 
     public bool IsTimesUp { get; private set; } = false;
@@ -14,8 +15,14 @@ public class TimeGauge : MonoBehaviour
     {
         CurrentGauge = maxGauge;
         Coroutine changeGuageEveryT = StartCoroutine(ChangeUIGaugeEveryTCo(gaugeUpdateCool));
+        GameEvents.OnChromaDashSuccessed += RecoverTimeWhenChromaSuccess;
+        GameEvents.OnPenaltyWhenNoColorMatch += TakePenaltyWhenColorNoMatch;
     }
-
+    private void OnDestroy()
+    {
+        GameEvents.OnChromaDashSuccessed -= RecoverTimeWhenChromaSuccess;
+        GameEvents.OnPenaltyWhenNoColorMatch -= TakePenaltyWhenColorNoMatch;
+    }
     void Update()
     {
         if (CurrentGauge > 0)
@@ -30,7 +37,7 @@ public class TimeGauge : MonoBehaviour
             }
         }
     }
-    public void TakePenaltyWhenColorMisMatch(float amount)
+    public void TakePenaltyWhenColorNoMatch(float amount)
     {
         if (CurrentGauge > 0)
         {

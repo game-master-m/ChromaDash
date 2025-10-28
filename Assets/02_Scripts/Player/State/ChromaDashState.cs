@@ -7,12 +7,12 @@ public class ChromaDashState : PlayerState
     private Coroutine dashTimeCo;
     public override void Enter()
     {
+        base.Enter();
         player.IsChromaDash = true;
-
         player.Move.AddForceImpulseX(player.ChromaDashForce);
         player.Anim.PlayAnim(AnimHash.fastRunHash);
         dashTimeCo = player.StartCoroutine(ChromaDashTimeCo(player.ChromaDashTime));
-        base.Enter();
+        GameEvents.RaisedOnChromaDashSuccessed(player.ChromaDashSuccesRewardAmount);
     }
     public override void Update()
     {
@@ -26,8 +26,8 @@ public class ChromaDashState : PlayerState
     public override void Exit()
     {
         base.Exit();
-        player.StopCoroutine(dashTimeCo);
-        player.IsChromaDash = false;
+        //player.StopCoroutine(dashTimeCo); 항상 제 시간동안 적용되게.
+        //player.IsChromaDash = false;
     }
     IEnumerator ChromaDashTimeCo(float t)
     {
