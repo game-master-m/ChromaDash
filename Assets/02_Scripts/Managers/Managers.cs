@@ -1,51 +1,56 @@
-
 using UnityEngine;
 
-public static class Managers
+public class Managers : MonoBehaviour
 {
-    private static GameObject _root;
+    public static Managers Instance { get; private set; }
+    [Header("매니저 프리팹")]
+    [SerializeField] private GameObject poolManagerPrefab;
+    [SerializeField] private GameObject inputManagerPrefab;
+    [SerializeField] private GameObject gameManagerPrefab;
+    [SerializeField] private GameObject inventoryManagerPrefab;
+    [SerializeField] private GameObject playerStatsManagerPrefab;
 
-    private static PoolManager _pool;
-    private static InputManager _input;
-    private static void Init()
+    public static PoolManager Pool { get; private set; }
+    public static InputManager Input { get; private set; }
+    public static GameManager Game { get; private set; }
+    private void Awake()
     {
-        if (_root == null)
+        if (Instance == null)
         {
-            _root = GameObject.Find("@Managers");
-            if (_root == null)
-            {
-                _root = new GameObject("@Managers");
-                Object.DontDestroyOnLoad(_root);
-            }
+            Instance = this;
+            DontDestroyOnLoad(this);
         }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+        //매니저들 생성
+        if (poolManagerPrefab != null)
+        {
+            GameObject poolGo = Instantiate(poolManagerPrefab, transform);
+            Pool = poolGo.GetComponent<PoolManager>();
+        }
+        if (inputManagerPrefab != null)
+        {
+            GameObject inputGo = Instantiate(inputManagerPrefab, transform);
+            Input = inputGo.GetComponent<InputManager>();
+        }
+
+        if (gameManagerPrefab != null)
+        {
+            GameObject gameGo = Instantiate(gameManagerPrefab, transform);
+            Game = gameGo.GetComponent<GameManager>();
+        }
+        if (inventoryManagerPrefab != null)
+        {
+            GameObject invenGo = Instantiate(inventoryManagerPrefab, transform);
+        }
+        if (playerStatsManagerPrefab != null)
+        {
+            GameObject invenGo = Instantiate(playerStatsManagerPrefab, transform);
+        }
+
     }
 
-    private static void CreateManager<T>(ref T manager, string name) where T : Component
-    {
-        if (manager == null)
-        {
-            Init();
-            GameObject go = new GameObject(name);
-            manager = go.AddComponent<T>();
-            Object.DontDestroyOnLoad(go);
-            go.transform.SetParent(_root.transform, false);
-        }
-    }
-
-    public static PoolManager Pool
-    {
-        get
-        {
-            CreateManager(ref _pool, "PoolManager");
-            return _pool;
-        }
-    }
-    public static InputManager Input
-    {
-        get
-        {
-            CreateManager(ref _input, "InputManager");
-            return _input;
-        }
-    }
 }

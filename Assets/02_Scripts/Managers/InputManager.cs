@@ -11,8 +11,12 @@ public class InputManager : MonoBehaviour
     public bool IsQuickSlot1Pressed { get; private set; }
     public bool IsQuickSlot2Pressed { get; private set; }
     public bool IsQuickSlot3Pressed { get; private set; }
-    public bool IsPausePressed { get; private set; }
-    public bool IsReLoadRPressed { get; private set; }
+    public bool IsReLoadPressed { get; private set; }
+
+    //이벤트
+    [Header("발행할 이벤트")]
+    [SerializeField] private IntEventChannelSO onUseQuickSlotRequest;
+    [SerializeField] private VoidEventChannelSO onPauseRequest;
     private void Awake()
     {
         if (Instance == null)
@@ -31,10 +35,13 @@ public class InputManager : MonoBehaviour
         IsJumpPressing = Input.GetKey(KeyCode.Space);
         IsColorChangeLeftPressed = Input.GetKeyDown(KeyCode.LeftArrow);
         IsColorChangeRightPressed = Input.GetKeyDown(KeyCode.RightArrow);
-        IsQuickSlot1Pressed = Input.GetKeyDown(KeyCode.Alpha1);
-        IsQuickSlot2Pressed = Input.GetKeyDown(KeyCode.Alpha2);
-        IsQuickSlot3Pressed = Input.GetKeyDown(KeyCode.Alpha3);
 
-        IsReLoadRPressed = Input.GetKeyDown(KeyCode.R);
+        if (Input.GetKeyDown(KeyCode.Alpha1)) onUseQuickSlotRequest?.Raised(0);
+        if (Input.GetKeyDown(KeyCode.Alpha2)) onUseQuickSlotRequest?.Raised(1);
+        if (Input.GetKeyDown(KeyCode.Alpha3)) onUseQuickSlotRequest?.Raised(2);
+
+        if (Input.GetKeyDown(KeyCode.Escape)) onPauseRequest?.Raised();
+
+        IsReLoadPressed = Input.GetKeyDown(KeyCode.R);
     }
 }

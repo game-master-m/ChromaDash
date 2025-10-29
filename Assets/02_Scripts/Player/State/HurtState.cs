@@ -17,7 +17,8 @@ public class HurtState : PlayerState
         player.Move.SetVelocityX(player.HurtSlowSpeed);
         IsHurtSlow = true;
         player.StartCoroutine(DelayHurtMotionCo(clipLength));
-        GameEvents.RaisedOnPenaltyWhenNoColorMatch(player.PenaltyColorNoMatchAmount);
+
+        player.OnPenaltyWhenNoColorMatch.Rasied(player.PenaltyColorNoMatchAmount);
 
     }
     public override void Update()
