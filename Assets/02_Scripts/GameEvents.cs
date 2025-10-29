@@ -28,4 +28,10 @@ public static class GameEvents
     {
         OnPenaltyWhenNoColorMatch?.Invoke(amount);
     }
+    //Äü ½½·Ô °ü·Ã
+    public static event Action<int, ItemData> OnQuickSlotChange;
+    public static void RaisedOnQuickSlotChange(int slotIndex, ItemData itemData)
+    {
+        OnQuickSlotChange?.Invoke(slotIndex, itemData);
+    }
 }

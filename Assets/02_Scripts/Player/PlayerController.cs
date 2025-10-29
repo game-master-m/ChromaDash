@@ -44,9 +44,11 @@ public class PlayerController : MonoBehaviour
     [Header("게이지 관련")]
     [SerializeField] private float chromaDashSuccessRewardAmount = 5.0f;
     [SerializeField] private float penaltyColorNoMatchAmount = 10.0f;
-
+    [Header("이벤트 발행")]
+    [SerializeField] private FloatEventChannelSO onPenaltyWhenNoColorMatch;
 
     //인스펙터 조절변수 Getter
+    public FloatEventChannelSO OnPenaltyWhenNoColorMatch { get { return onPenaltyWhenNoColorMatch; } }
     public float ChromaDashSuccesRewardAmount { get { return chromaDashSuccessRewardAmount; } }
     public float PenaltyColorNoMatchAmount { get { return penaltyColorNoMatchAmount; } }
     public float HurtSlowSpeed { get { return hurtSlowSpeed; } }
@@ -76,7 +78,6 @@ public class PlayerController : MonoBehaviour
         Move = GetComponent<PlayerMove>();
         Anim = GetComponent<PlayerAnim>();
         //인풋매니저 등록해서 사용
-        Input = Managers.Input;
 
         //초기 색상
         ECurrentColor = EChromaColor.Red;
@@ -96,6 +97,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Start()
     {
+        Input = Managers.Input;
         StateMachine.ChangeState(airState);
 
         //이벤트
@@ -109,7 +111,7 @@ public class PlayerController : MonoBehaviour
 
 
         //test용 reLoad
-        if (Input.IsReLoadRPressed) SceneManager.LoadScene(0);
+        if (Input.IsReLoadPressed) SceneManager.LoadScene(0);
     }
     private void FixedUpdate()
     {
@@ -126,11 +128,12 @@ public class PlayerController : MonoBehaviour
         StateMachine.AddTransition(jumpOnGroundState, jumpInAirState, new Func<bool>(DoChangeStateJumpOnGroundToJump));
         StateMachine.AddTransition(jumpInAirState, airState, () => jumpInAirState.DoChangeStateJumpInAirToAirIdle);
         StateMachine.AddTransition(airState, jumpInAirState, new Func<bool>(DoChangeStateAirToJump));
-        StateMachine.AddTransition(airState, readyChromaDashState, () => !(StateMachine.CurrentState is ReadyChromaDashState)
+        StateMachine.AddTransition(airState, readyChromaDashState, () => !(StateMachine.CurrentState is ReadyChromaDashState) && !(StateMachine.CurrentState is JumpInAirState)
                 && IsInChromaDashDistance && ECurrentColor != EDetectedColorFromSeg && EDetectedColorFromSeg != EChromaColor.None);
 
         StateMachine.AddTransition(readyChromaDashState, chromaDashState,
             () => readyChromaDashState.CanChromaDashReady && (IsDelayedGround || IsGround || isChromaDashBetweenGroundToDelayed));
+        StateMachine.AddTransition(readyChromaDashState, jumpInAirState, new Func<bool>(DoChangeStateAirToJump));
         StateMachine.AddTransition(chromaDashState, groundState, () => !IsChromaDash);
         StateMachine.AddTransition(chromaDashState, jumpOnGroundState, () => Input.IsJumpPressed && IsGround);
         StateMachine.AddTransition(chromaDashState, jumpInAirState, () => Input.IsJumpPressed && !IsGround);

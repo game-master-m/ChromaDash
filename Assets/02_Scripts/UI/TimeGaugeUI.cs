@@ -3,8 +3,11 @@ using UnityEngine.UI;
 
 public class TimeGaugeUI : MonoBehaviour
 {
-    [SerializeField] private Image currentImage;
+    [Header("데이터 참조")]
+    [SerializeField] private PlayerStatsData playerStatsData;
 
+    [Header("UI 컴포넌트")]
+    [SerializeField] private Image currentImage;
     [SerializeField] private Sprite redSprite;
     [SerializeField] private Sprite blueSprite;
     [SerializeField] private Sprite greenSprite;
@@ -15,13 +18,18 @@ public class TimeGaugeUI : MonoBehaviour
     }
     private void OnEnable()
     {
-        GameEvents.OnTimeGaugeChanged += UpdateGaugeLength;
-        GameEvents.OnChromaColorChanged += UpdateGaugeColor;
+        if (playerStatsData == null) return;
+        playerStatsData.onTimeGaugeChange += UpdateGaugeLength;
+        playerStatsData.onChromaColorChange += UpdateGaugeColor;
+
+        UpdateGaugeLength(playerStatsData.CurrentGauge, playerStatsData.MaxGauge);
+        UpdateGaugeColor(playerStatsData.CurrentChromaColor);
     }
     private void OnDisable()
     {
-        GameEvents.OnTimeGaugeChanged -= UpdateGaugeLength;
-        GameEvents.OnChromaColorChanged -= UpdateGaugeColor;
+        if (playerStatsData == null) return;
+        playerStatsData.onTimeGaugeChange -= UpdateGaugeLength;
+        playerStatsData.onChromaColorChange -= UpdateGaugeColor;
     }
 
     private void UpdateGaugeLength(float current, float max)
