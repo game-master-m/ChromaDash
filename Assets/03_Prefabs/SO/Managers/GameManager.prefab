@@ -46,6 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onPauseRequest: {fileID: 11400000, guid: 99c3bd897c2f9594c89e7c254d491e2c, type: 2}
   onPlayerDie: {fileID: 11400000, guid: a153982e656b7de4582317686fdc8e2f, type: 2}
+  onGameStart: {fileID: 11400000, guid: e75e8dd0bddee4b4096fe88732b4e6a4, type: 2}
   onGamePause: {fileID: 11400000, guid: 37eacd0496f42a64e8842e3ef229afb1, type: 2}
   onGameResume: {fileID: 11400000, guid: 8bc48d3ebc204684b85a687c31cf4fdf, type: 2}
   onGameOver: {fileID: 11400000, guid: 7fdbd8c670750164f9e6a09f97929b6e, type: 2}

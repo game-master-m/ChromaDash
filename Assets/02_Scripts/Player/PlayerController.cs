@@ -46,9 +46,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float penaltyColorNoMatchAmount = 10.0f;
     [Header("이벤트 발행")]
     [SerializeField] private FloatEventChannelSO onPenaltyWhenNoColorMatch;
+    [SerializeField] private FloatEventChannelSO onChromaDashSuccess;
 
     //인스펙터 조절변수 Getter
     public FloatEventChannelSO OnPenaltyWhenNoColorMatch { get { return onPenaltyWhenNoColorMatch; } }
+    public FloatEventChannelSO OnChromaDashSuccess { get { return onChromaDashSuccess; } }
     public float ChromaDashSuccesRewardAmount { get { return chromaDashSuccessRewardAmount; } }
     public float PenaltyColorNoMatchAmount { get { return penaltyColorNoMatchAmount; } }
     public float HurtSlowSpeed { get { return hurtSlowSpeed; } }

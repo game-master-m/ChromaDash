@@ -12,26 +12,6 @@ public class QuickSlotUI : MonoBehaviour
     [SerializeField] private Image[] slotIcons;
     [SerializeField] private TextMeshProUGUI[] slotAmounts;
 
-    private void Start()
-    {
-        for (int i = 0; i < playerData.QuickSlots.Count; i++)
-        {
-            if (playerData.QuickSlots[i] == null)
-            {
-                slotIcons[i].sprite = null;
-                slotIcons[i].color = new Color(1, 1, 1, 0.0f);
-                slotAmounts[i].text = null;
-
-            }
-            else
-            {
-                slotIcons[i].sprite = playerData.QuickSlots[i].itemIcon;
-                slotIcons[i].color = Color.white;
-                if (playerData.QuickSlots[i].itemCount == 0) slotAmounts[i].text = null;
-                slotAmounts[i].text = $"{playerData.QuickSlots[i].itemCount}";
-            }
-        }
-    }
     private void OnEnable()
     {
         playerData.OnQuickSlotChange += UpdateQuickSlotUI;
@@ -56,7 +36,7 @@ public class QuickSlotUI : MonoBehaviour
         {
             icon.sprite = null;
             icon.color = new Color(1, 1, 1, 0.0f);
-            slotAmount.text = null;
+            slotAmount.text = "";
         }
     }
 }

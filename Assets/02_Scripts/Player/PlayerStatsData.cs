@@ -21,14 +21,14 @@ public class PlayerStatsData : ScriptableObject
     {
         CurrentGauge = maxGauge;
         IsTimesUp = false;
-        ChangeColor(CurrentChromaColor);
+        ChangeColor(EChromaColor.Red);
 
         onTimeGaugeChange?.Invoke(CurrentGauge, maxGauge);
     }
-    public bool UpdataGauge(float deltaTime, float costPerSec)
+    public bool UpdataGauge(float costPerSec)
     {
         if (IsTimesUp) return true;
-        CurrentGauge -= deltaTime * costPerSec;
+        CurrentGauge -= costPerSec;
         if (CurrentGauge < 0) CurrentGauge = 0;
 
         onTimeGaugeChange?.Invoke(CurrentGauge, maxGauge);

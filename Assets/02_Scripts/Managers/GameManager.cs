@@ -1,7 +1,10 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    private readonly string playSceneName = "PlayScene";
+    private readonly string lobbySceneName = "LobbyScene";
 
     [Header("데이터 참조")]
     //[SerializeField] private GameSettingsSO gameSettings;
@@ -12,23 +15,51 @@ public class GameManager : MonoBehaviour
     [SerializeField] private VoidEventChannelSO onPlayerDie;
 
     [Header("발행할 이벤트")]
+    [SerializeField] private VoidEventChannelSO onGameStart;
     [SerializeField] private VoidEventChannelSO onGamePause;
     [SerializeField] private VoidEventChannelSO onGameResume;
     [SerializeField] private VoidEventChannelSO onGameOver;
 
     private bool isPause = false;
 
+    private void Start()
+    {
+        LoadPlayScene();
+        //LoadLobbyScene();
+    }
     private void OnEnable()
     {
         onPlayerDie.OnEvent += HandleGameOver;
         onPauseRequest.OnEvent += TogglePause;
+
+        //씬 전환관련
+        SceneManager.sceneLoaded += HandleOnSceneLoad;
     }
     private void OnDisable()
     {
         onPlayerDie.OnEvent -= HandleGameOver;
         onPauseRequest.OnEvent -= TogglePause;
+        SceneManager.sceneLoaded -= HandleOnSceneLoad;
     }
-
+    public void HandleOnSceneLoad(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == playSceneName)
+        {
+            if (onGameStart != null) onGameStart.Raised();
+        }
+    }
+    public void LoadPlayScene()
+    {
+        Time.timeScale = 1.0f;
+        isPause = false;
+        SceneManager.LoadScene(playSceneName);
+    }
+    public void LoadLobbyScene()
+    {
+        Time.timeScale = 1.0f;
+        isPause = false;
+        SceneManager.LoadScene(lobbySceneName);
+    }
     public void TogglePause()
     {
         isPause = !isPause;

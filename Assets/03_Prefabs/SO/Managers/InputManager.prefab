@@ -45,3 +45,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onUseQuickSlotRequest: {fileID: 11400000, guid: a0b78b995bfdd214e8519b8974240872, type: 2}
+  onPauseRequest: {fileID: 11400000, guid: 99c3bd897c2f9594c89e7c254d491e2c, type: 2}

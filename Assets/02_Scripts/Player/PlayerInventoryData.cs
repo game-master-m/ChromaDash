@@ -1,19 +1,21 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PlayerInventoryData", menuName = "ChromaDash/GameData/PlayerInventoryData")]
 public class PlayerInventoryData : ScriptableObject
 {
-    [Header("재화")]
+    [Header("데이터")]
     [SerializeField] private int gold = 1000;
     public int Gold { get { return gold; } }
-    public event Action<int> OnGoldChange;
+    public event Action OnGoldChange;
+
 
     [Header("메인 인벤토리")]
     [SerializeField] private List<ItemData> mainInventory = new List<ItemData>();
     public IReadOnlyList<ItemData> MainInventory { get { return mainInventory; } }
-    public event Action<ItemData> OnMainInventoryChange;
+    public event Action OnMainInventoryChange;
 
     [Header("퀵 슬롯")]
     [SerializeField] private ItemData[] quickSlots = new ItemData[3];
@@ -29,30 +31,51 @@ public class PlayerInventoryData : ScriptableObject
             return false;
         }
         gold += amount;
-        OnGoldChange?.Invoke(amount);
+        OnGoldChange?.Invoke();
         return true;
     }
-
-    public void AddItem(ItemData item)
+    public void NotifyMainInventoryChange()
+    {
+        OnMainInventoryChange?.Invoke();
+    }
+    public void AddItemToMainInventory(ItemData itemInstance)
     {
         //인벤 공간 확인? 없으면?
-        mainInventory.Add(item);
-        OnMainInventoryChange?.Invoke(item);
+
+        //스태킹 추가
+        ItemData stackableItem = MainInventory.FirstOrDefault(
+            i => i.itemName == itemInstance.itemName && i.itemCount < i.maxStackCount);
+        if (stackableItem != null)
+        {
+            int remainingSpace = stackableItem.maxStackCount - stackableItem.itemCount;
+            int amountToAdd = Mathf.Min(remainingSpace, itemInstance.itemCount);
+
+            stackableItem.itemCount += amountToAdd;
+            itemInstance.itemCount -= amountToAdd;
+        }
+        if (itemInstance.itemCount > 0)
+        {
+            mainInventory.Add(itemInstance);
+        }
+        else
+        {
+            Destroy(itemInstance);
+        }
+        OnMainInventoryChange?.Invoke();
     }
-    public bool RemoveItem(ItemData item)
+    public bool RemoveItemFromInventory(ItemData itemInstance)
     {
-        bool success = mainInventory.Remove(item);
-        //인벤에 제거할 아이템이 없으면 실패.. 실패 메세지?
+        bool success = mainInventory.Remove(itemInstance);
         if (success)
         {
-            OnMainInventoryChange?.Invoke(item);
+            OnMainInventoryChange?.Invoke();
         }
         return success;
     }
-    public void AssignToQuickSlot(ItemData item, int index)
+    public void AssignToQuickSlot(ItemData itemInstance, int index)
     {
         if (index < 0 || index >= quickSlots.Length) return;
-        quickSlots[index] = item;
-        OnQuickSlotChange?.Invoke(item, index);
+        quickSlots[index] = itemInstance;
+        OnQuickSlotChange?.Invoke(itemInstance, index);
     }
 }

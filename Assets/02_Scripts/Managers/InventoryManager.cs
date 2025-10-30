@@ -12,6 +12,8 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] private ItemEventChannelSO onSellItemRequest;
     [SerializeField] private ItemSlotEventChannelSO onEquipToQuickSlotRequest;
     [SerializeField] private IntEventChannelSO onUseQuickSlotRequest;
+    //퀵슬롯 장착 해제 추가
+    [SerializeField] private IntEventChannelSO onUnEquipQuickSlotRequest;
 
     [Header("발행할 채널")]
     [SerializeField] private FloatEventChannelSO onHealPotionRequest;
@@ -21,6 +23,7 @@ public class InventoryManager : MonoBehaviour
         onSellItemRequest.OnEvent += HandleSellItemRequest;
         onEquipToQuickSlotRequest.OnEvent += HandleEquipToQuickSlotRequest;
         onUseQuickSlotRequest.OnEvent += HandleUseQuickSlotRequest;
+        onUnEquipQuickSlotRequest.OnEvent += HandleUnEquipQuickSlotRequest;
     }
     private void OnDisable()
     {
@@ -28,51 +31,97 @@ public class InventoryManager : MonoBehaviour
         onSellItemRequest.OnEvent -= HandleSellItemRequest;
         onEquipToQuickSlotRequest.OnEvent -= HandleEquipToQuickSlotRequest;
         onUseQuickSlotRequest.OnEvent -= HandleUseQuickSlotRequest;
+        onUnEquipQuickSlotRequest.OnEvent -= HandleUnEquipQuickSlotRequest;
     }
 
     //이벤트 핸들러
-    private void HandleBuyItemRequest(ItemData item)
+
+    private void HandleBuyItemRequest(ItemData itemFromShop)
     {
-        if (playerData.Gold < item.buyPrice)
+        if (playerData.Gold < itemFromShop.buyPrice)
         {
             //구매 실패
             return;
         }
 
-        playerData.ModifyGold(-item.buyPrice);
-        playerData.AddItem(item);
+        playerData.ModifyGold(-itemFromShop.buyPrice);
+
+        ItemData newItemInstance = Instantiate(itemFromShop);
+        newItemInstance.itemCount = 1;
+        newItemInstance.itemName = itemFromShop.name;
+
+        playerData.AddItemToMainInventory(newItemInstance);
     }
-    private void HandleSellItemRequest(ItemData item)
+    private void HandleSellItemRequest(ItemData itemInstance)
     {
-        if (!playerData.MainInventory.Contains(item))
+        if (!playerData.MainInventory.Contains(itemInstance))
         {
             //인벤에 없음.
             return;
         }
-        if (playerData.RemoveItem(item))
+        if (playerData.RemoveItemFromInventory(itemInstance))
         {
-            playerData.ModifyGold(item.sellPrice);
+            playerData.ModifyGold(itemInstance.sellPrice * itemInstance.itemCount);
+            Destroy(itemInstance);
         }
     }
-    private void HandleEquipToQuickSlotRequest(ItemData item, int index)
+    private void HandleEquipToQuickSlotRequest(ItemData itemFromInven, int index)
     {
-        if (item.eItemType == EItemType.None)
+        if (!playerData.MainInventory.Contains(itemFromInven)) return;
+        if (itemFromInven.eItemType == EItemType.None)
         {
             //등록 못 하는 아이템
             return;
         }
-        playerData.AssignToQuickSlot(item, index);
+        int itemQuickSlotMax = itemFromInven.maxQuickSlotStack;
+        ItemData quickSlotItem = playerData.QuickSlots[index];
+
+        if (quickSlotItem == null)
+        {
+            int amountToEquip = Mathf.Min(itemQuickSlotMax, itemFromInven.itemCount);
+
+            ItemData newQuickSlotInstance = Instantiate(itemFromInven);
+            newQuickSlotInstance.name = itemFromInven.name;
+            newQuickSlotInstance.itemCount = amountToEquip;
+
+            itemFromInven.itemCount -= amountToEquip;
+            playerData.AssignToQuickSlot(newQuickSlotInstance, index);
+        }
+        else if (quickSlotItem.name == itemFromInven.name && quickSlotItem.itemCount < itemQuickSlotMax)
+        {
+            int remainingSpace = itemQuickSlotMax - quickSlotItem.itemCount;
+            int equipAmount = Mathf.Min(remainingSpace, itemFromInven.itemCount);
+
+            quickSlotItem.itemCount += equipAmount;
+            itemFromInven.itemCount -= equipAmount;
+
+            playerData.AssignToQuickSlot(quickSlotItem, index);
+        }
+        else
+        {
+            return;
+        }
+
+        if (itemFromInven.itemCount <= 0)
+        {
+            playerData.RemoveItemFromInventory(itemFromInven);
+            Destroy(itemFromInven);
+        }
+        else
+        {
+            playerData.NotifyMainInventoryChange();
+        }
     }
     private void HandleUseQuickSlotRequest(int index)
     {
-        ItemData item = playerData.QuickSlots[index];
-        if (item == null) return;
+        ItemData itemInstance = playerData.QuickSlots[index];
+        if (itemInstance == null) return;
         //사용을 하고~
-        switch (item.eItemType)
+        switch (itemInstance.eItemType)
         {
             case EItemType.Heal:
-                onHealPotionRequest.Rasied(item.itemPower);
-                item.itemCount--;
+                onHealPotionRequest.Raised(itemInstance.itemPower);
+                itemInstance.itemCount--;
                 break;
             case EItemType.SlowHeal:
             //지속회복, 컬러변경 X
@@ -82,14 +131,23 @@ public class InventoryManager : MonoBehaviour
             default:
                 break;
         }
-        if (item.itemCount <= 0)
+        if (itemInstance.itemCount <= 0)
         {
             playerData.AssignToQuickSlot(null, index);
+            Destroy(itemInstance);
         }
         else
         {
-            playerData.AssignToQuickSlot(item, index);
+            playerData.AssignToQuickSlot(itemInstance, index);
         }
+    }
+    private void HandleUnEquipQuickSlotRequest(int index)
+    {
+        ItemData itemToUnEquipFromQuickSlot = playerData.QuickSlots[index];
+        if (itemToUnEquipFromQuickSlot == null) return;
 
+        playerData.AssignToQuickSlot(null, index);
+
+        playerData.AddItemToMainInventory(itemToUnEquipFromQuickSlot);
     }
 }

@@ -48,7 +48,7 @@ public class Managers : MonoBehaviour
         }
         if (playerStatsManagerPrefab != null)
         {
-            GameObject invenGo = Instantiate(playerStatsManagerPrefab, transform);
+            GameObject statsGo = Instantiate(playerStatsManagerPrefab, transform);
         }
 
     }

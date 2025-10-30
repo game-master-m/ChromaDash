@@ -15,6 +15,6 @@ MonoBehaviour:
   gold: 1000
   mainInventory: []
   quickSlots:
-  - {fileID: 0}
+  - {fileID: 11400000, guid: af89958ba679ed94990a7d10f2d10857, type: 2}
   - {fileID: 11400000, guid: a92cd0643be3e7e488ff3b7fc6667fd6, type: 2}
   - {fileID: 0}
