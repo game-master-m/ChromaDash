@@ -12,7 +12,7 @@ public class ChromaDashState : PlayerState
         player.Move.AddForceImpulseX(player.ChromaDashForce);
         player.Anim.PlayAnim(AnimHash.fastRunHash);
         dashTimeCo = player.StartCoroutine(ChromaDashTimeCo(player.ChromaDashTime));
-        GameEvents.RaisedOnChromaDashSuccessed(player.ChromaDashSuccesRewardAmount);
+        player.OnChromaDashSuccess.Raised(player.ChromaDashSuccesRewardAmount);
     }
     public override void Update()
     {
