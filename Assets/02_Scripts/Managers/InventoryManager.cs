@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class InventoryManager : MonoBehaviour
@@ -9,11 +10,11 @@ public class InventoryManager : MonoBehaviour
 
     [Header("구독할 채널")]
     [SerializeField] private ItemEventChannelSO onBuyItemRequest;
-    [SerializeField] private ItemEventChannelSO onSellItemRequest;
-    [SerializeField] private ItemSlotEventChannelSO onEquipToQuickSlotRequest;
+    [SerializeField] private InventoryEventChannelSO onSellItemRequest;
+    [SerializeField] private InventorySlotEventChannelSO onEquipToQuickSlotRequest;
     [SerializeField] private IntEventChannelSO onUseQuickSlotRequest;
     //퀵슬롯 장착 해제 추가
-    [SerializeField] private IntEventChannelSO onUnEquipQuickSlotRequest;
+    [SerializeField] private IntEventChannelSO onUnEquipQuickSlotRequest;   //Inventory UI가 발행
 
     [Header("발행할 채널")]
     [SerializeField] private FloatEventChannelSO onHealPotionRequest;
@@ -46,54 +47,52 @@ public class InventoryManager : MonoBehaviour
 
         playerData.ModifyGold(-itemFromShop.buyPrice);
 
-        ItemData newItemInstance = Instantiate(itemFromShop);
-        newItemInstance.itemCount = 1;
-        newItemInstance.itemName = itemFromShop.name;
-
-        playerData.AddItemToMainInventory(newItemInstance);
+        playerData.AddItemToMainInventory(itemFromShop, 1);
     }
-    private void HandleSellItemRequest(ItemData itemInstance)
+    private void HandleSellItemRequest(InventorySlotData slotToSell)
     {
-        if (!playerData.MainInventory.Contains(itemInstance))
+        if (!playerData.MainInventory.Contains(slotToSell))
         {
             //인벤에 없음.
             return;
         }
-        if (playerData.RemoveItemFromInventory(itemInstance))
+        int sellTotal = slotToSell.itemTemplate.sellPrice * slotToSell.itemCount;
+        if (playerData.RemoveItemFromInventory(slotToSell))
         {
-            playerData.ModifyGold(itemInstance.sellPrice * itemInstance.itemCount);
-            Destroy(itemInstance);
+            playerData.ModifyGold(sellTotal);
         }
     }
-    private void HandleEquipToQuickSlotRequest(ItemData itemFromInven, int index)
+    private void HandleEquipToQuickSlotRequest(InventorySlotData slotFromInven, int index)
     {
-        if (!playerData.MainInventory.Contains(itemFromInven)) return;
-        if (itemFromInven.eItemType == EItemType.None)
+        if (!playerData.MainInventory.Contains(slotFromInven)) return;
+        ItemData itemTemplate = slotFromInven.itemTemplate;
+
+        if (itemTemplate.eItemType == EItemType.None)
         {
+            Debug.Log("등록 못 하는 아이템 ");
             //등록 못 하는 아이템
             return;
         }
-        int itemQuickSlotMax = itemFromInven.maxQuickSlotStack;
-        ItemData quickSlotItem = playerData.QuickSlots[index];
+        int itemQuickSlotMax = itemTemplate.maxQuickSlotStack;
+        InventorySlotData quickSlotItem = playerData.QuickSlots[index];
 
-        if (quickSlotItem == null)
+        if (quickSlotItem == null || quickSlotItem.itemTemplate == null)
         {
-            int amountToEquip = Mathf.Min(itemQuickSlotMax, itemFromInven.itemCount);
+            int amountToEquip = Mathf.Min(itemQuickSlotMax, slotFromInven.itemCount);
 
-            ItemData newQuickSlotInstance = Instantiate(itemFromInven);
-            newQuickSlotInstance.name = itemFromInven.name;
-            newQuickSlotInstance.itemCount = amountToEquip;
+            InventorySlotData newQuickSlot = new InventorySlotData(itemTemplate, amountToEquip);
 
-            itemFromInven.itemCount -= amountToEquip;
-            playerData.AssignToQuickSlot(newQuickSlotInstance, index);
+            slotFromInven.itemCount -= amountToEquip;
+            playerData.AssignToQuickSlot(newQuickSlot, index);
+
         }
-        else if (quickSlotItem.name == itemFromInven.name && quickSlotItem.itemCount < itemQuickSlotMax)
+        else if (quickSlotItem.itemTemplate == itemTemplate && quickSlotItem.itemCount < itemQuickSlotMax)
         {
             int remainingSpace = itemQuickSlotMax - quickSlotItem.itemCount;
-            int equipAmount = Mathf.Min(remainingSpace, itemFromInven.itemCount);
+            int equipAmount = Mathf.Min(remainingSpace, slotFromInven.itemCount);
 
             quickSlotItem.itemCount += equipAmount;
-            itemFromInven.itemCount -= equipAmount;
+            slotFromInven.itemCount -= equipAmount;
 
             playerData.AssignToQuickSlot(quickSlotItem, index);
         }
@@ -102,10 +101,9 @@ public class InventoryManager : MonoBehaviour
             return;
         }
 
-        if (itemFromInven.itemCount <= 0)
+        if (slotFromInven.itemCount <= 0)
         {
-            playerData.RemoveItemFromInventory(itemFromInven);
-            Destroy(itemFromInven);
+            playerData.RemoveItemFromInventory(slotFromInven);
         }
         else
         {
@@ -114,14 +112,17 @@ public class InventoryManager : MonoBehaviour
     }
     private void HandleUseQuickSlotRequest(int index)
     {
-        ItemData itemInstance = playerData.QuickSlots[index];
-        if (itemInstance == null) return;
+        InventorySlotData slotInstance = playerData.QuickSlots[index];
+
+        if (slotInstance == null || slotInstance.itemTemplate == null) return;
+
+        ItemData itemTemplate = slotInstance.itemTemplate;
         //사용을 하고~
-        switch (itemInstance.eItemType)
+        switch (itemTemplate.eItemType)
         {
             case EItemType.Heal:
-                onHealPotionRequest.Raised(itemInstance.itemPower);
-                itemInstance.itemCount--;
+                onHealPotionRequest.Raised(itemTemplate.itemPower);
+                slotInstance.itemCount--;
                 break;
             case EItemType.SlowHeal:
             //지속회복, 컬러변경 X
@@ -131,23 +132,22 @@ public class InventoryManager : MonoBehaviour
             default:
                 break;
         }
-        if (itemInstance.itemCount <= 0)
+        if (slotInstance.itemCount <= 0)
         {
             playerData.AssignToQuickSlot(null, index);
-            Destroy(itemInstance);
         }
         else
         {
-            playerData.AssignToQuickSlot(itemInstance, index);
+            playerData.AssignToQuickSlot(slotInstance, index);
         }
     }
     private void HandleUnEquipQuickSlotRequest(int index)
     {
-        ItemData itemToUnEquipFromQuickSlot = playerData.QuickSlots[index];
-        if (itemToUnEquipFromQuickSlot == null) return;
+        InventorySlotData slotToUnEquipFromQuickSlot = playerData.QuickSlots[index];
+        if (slotToUnEquipFromQuickSlot == null) return;
 
         playerData.AssignToQuickSlot(null, index);
 
-        playerData.AddItemToMainInventory(itemToUnEquipFromQuickSlot);
+        playerData.AddItemToMainInventory(slotToUnEquipFromQuickSlot.itemTemplate, slotToUnEquipFromQuickSlot.itemCount);
     }
 }

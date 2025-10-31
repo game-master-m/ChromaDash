@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a69b1f2d4009cbe47836a6e88dc6eec4, type: 3}
-  m_Name: Shield
+  m_Name: ReWind
   m_EditorClassIdentifier: 
-  itemName: Shield
-  description: Block MisMatch
+  itemName: ReWind
+  description: Go Back 1 sec
   itemPower: -1
-  itemIcon: {fileID: -6717884257390833292, guid: 6f2409c812e59e04fb9d2af0715bea80, type: 3}
-  eItemType: 2
-  buyPrice: 10
-  sellPrice: 5
+  itemIcon: {fileID: -8801819111103863087, guid: 12d33c45df2a46642bbc13c03009055b, type: 3}
+  eItemType: 3
+  buyPrice: 200
+  sellPrice: 120
   maxStackCount: 99
   maxQuickSlotStack: 1

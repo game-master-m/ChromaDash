@@ -30,7 +30,7 @@ public class ShopUI : MonoBehaviour
     }
     public void UpdateGoldUI()
     {
-        if (playerGoldText != null) playerGoldText.text = $"Gold : {playerData.Gold}";
+        if (playerGoldText != null) playerGoldText.text = $"{playerData.Gold} G";
     }
     public void RefreshShopUI()
     {
@@ -44,7 +44,7 @@ public class ShopUI : MonoBehaviour
         foreach (ItemData itemData in shopData.ShopItems)
         {
             GameObject slotGo = Instantiate(shopItemSlotPrefab, slotContainer);
-            ShopItemSlotUI slotUI = slotGo.GetComponent<ShopItemSlotUI>();
+            ShopItemSlotPrefab slotUI = slotGo.GetComponent<ShopItemSlotPrefab>();
             if (slotUI != null)
             {
                 slotUI.Init(itemData, OnBuyButtonClicked);

@@ -24,8 +24,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        LoadPlayScene();
-        //LoadLobbyScene();
+        //LoadPlayScene();
+        LoadLobbyScene();
     }
     private void OnEnable()
     {

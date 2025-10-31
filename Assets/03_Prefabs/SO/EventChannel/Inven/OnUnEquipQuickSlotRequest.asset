@@ -9,6 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70541eb38fa1bfd44b29bdfdbdf12948, type: 3}
-  m_Name: OnSellItemRequest
+  m_Script: {fileID: 11500000, guid: e6a110aca3ba3464d8d65aca01a95beb, type: 3}
+  m_Name: OnUnEquipQuickSlotRequest
   m_EditorClassIdentifier: 

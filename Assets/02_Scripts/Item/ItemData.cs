@@ -17,6 +17,4 @@ public class ItemData : ScriptableObject
     public int maxStackCount = 99;
     public int maxQuickSlotStack = 1;
 
-    [HideInInspector]
-    public int itemCount = 1;
 }
