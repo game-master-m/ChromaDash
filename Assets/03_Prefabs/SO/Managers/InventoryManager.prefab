@@ -49,4 +49,5 @@ MonoBehaviour:
   onSellItemRequest: {fileID: 11400000, guid: 87ae52da4d5f1ed4095032b59512c564, type: 2}
   onEquipToQuickSlotRequest: {fileID: 11400000, guid: 56b277b0a9674144daa67b45e7c935af, type: 2}
   onUseQuickSlotRequest: {fileID: 11400000, guid: a0b78b995bfdd214e8519b8974240872, type: 2}
+  onUnEquipQuickSlotRequest: {fileID: 11400000, guid: d3e10e42ead33f34a85d7238704d2c99, type: 2}
   onHealPotionRequest: {fileID: 11400000, guid: 4fa46fbf11afd364996950a146b7bf30, type: 2}

@@ -42,5 +42,6 @@ public enum EItemType
     Heal,
     Shield,
     Rewind,
-    SlowHeal
+    SlowHeal,
+    SpeedUp
 }

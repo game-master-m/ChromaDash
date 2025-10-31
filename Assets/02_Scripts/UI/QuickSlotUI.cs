@@ -15,22 +15,25 @@ public class QuickSlotUI : MonoBehaviour
     private void OnEnable()
     {
         playerData.OnQuickSlotChange += UpdateQuickSlotUI;
+        UpdateQuickSlotUI(playerData.QuickSlots[0], 0);
+        UpdateQuickSlotUI(playerData.QuickSlots[1], 1);
+        UpdateQuickSlotUI(playerData.QuickSlots[2], 2);
     }
     private void OnDisable()
     {
         playerData.OnQuickSlotChange -= UpdateQuickSlotUI;
     }
 
-    private void UpdateQuickSlotUI(ItemData itemData, int index)
+    private void UpdateQuickSlotUI(InventorySlotData slotData, int index)
     {
         if (index < 0 || index >= slotIcons.Length) return;
         Image icon = slotIcons[index];
         TextMeshProUGUI slotAmount = slotAmounts[index];
-        if (itemData != null)
+        if (slotData != null && slotData.itemTemplate != null)
         {
-            icon.sprite = itemData.itemIcon;
+            icon.sprite = slotData.itemTemplate.itemIcon;
             icon.color = Color.white;
-            slotAmount.text = $"{itemData.itemCount}";
+            slotAmount.text = $"{slotData.itemCount}";
         }
         else
         {

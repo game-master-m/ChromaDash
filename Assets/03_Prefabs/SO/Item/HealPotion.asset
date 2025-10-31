@@ -12,13 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a69b1f2d4009cbe47836a6e88dc6eec4, type: 3}
   m_Name: HealPotion
   m_EditorClassIdentifier: 
-  itemName: HealPotion
-  description: 
+  itemName: Potion
+  description: TimeGuage +20
   itemPower: 20
   itemIcon: {fileID: -1401110133662507876, guid: 9035a2602b4b6774fb8c30b4f5872fca, type: 3}
   eItemType: 1
-  buyPrice: 50
-  sellPrice: 30
+  buyPrice: 80
+  sellPrice: 45
   maxStackCount: 99
   maxQuickSlotStack: 2
-  itemCount: 2
