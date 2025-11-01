@@ -11,7 +11,7 @@ public class InventoryItemSlotPrefab : MonoBehaviour
     [SerializeField] private TextMeshProUGUI itemNameText;
     [SerializeField] private TextMeshProUGUI itemCountText;
     [SerializeField] private Button selectButton;
-    [SerializeField] private Button sellButton;
+    //[SerializeField] private Button sellButton;
 
     [Header("하이라이트 관련")]
     [SerializeField] private Image selectHighligtImage;
@@ -21,7 +21,7 @@ public class InventoryItemSlotPrefab : MonoBehaviour
     private InventorySlotData slotInstance;
 
     private Action<InventorySlotData, InventoryItemSlotPrefab> onSelectCallBack;
-    private Action<InventorySlotData> onSellCallBack;
+    //private Action<InventorySlotData> onSellCallBack;
 
     private Coroutine runningFade;
 
@@ -34,11 +34,11 @@ public class InventoryItemSlotPrefab : MonoBehaviour
             selectHighligtImage.color = oriColor;
         }
     }
-    public void Init(InventorySlotData instance, Action<InventorySlotData, InventoryItemSlotPrefab> onSelect, Action<InventorySlotData> onSell)
+    public void Init(InventorySlotData instance, Action<InventorySlotData, InventoryItemSlotPrefab> onSelect)
     {
         slotInstance = instance;
         onSelectCallBack = onSelect;
-        onSellCallBack = onSell;
+        //onSellCallBack = onSell;
 
         itemIcon.sprite = slotInstance.itemTemplate.itemIcon;
         itemIcon.color = Color.white;
@@ -50,11 +50,11 @@ public class InventoryItemSlotPrefab : MonoBehaviour
             selectButton.onClick.RemoveAllListeners();
             selectButton.onClick.AddListener(OnSelect);
         }
-        if (sellButton != null)
-        {
-            sellButton.onClick.RemoveAllListeners();
-            sellButton.onClick.AddListener(OnSell);
-        }
+        //if (sellButton != null)
+        //{
+        //    sellButton.onClick.RemoveAllListeners();
+        //    sellButton.onClick.AddListener(OnSell);
+        //}
     }
     public void Select()
     {
@@ -72,10 +72,10 @@ public class InventoryItemSlotPrefab : MonoBehaviour
     {
         onSelectCallBack?.Invoke(slotInstance, this);
     }
-    private void OnSell()
-    {
-        onSellCallBack?.Invoke(slotInstance);
-    }
+    //private void OnSell()
+    //{
+    //    onSellCallBack?.Invoke(slotInstance);
+    //}
     private IEnumerator FadeHighlight(float targetAlpha)
     {
         float elapsedTime = 0.0f;

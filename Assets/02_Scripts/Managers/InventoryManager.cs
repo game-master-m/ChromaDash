@@ -10,7 +10,7 @@ public class InventoryManager : MonoBehaviour
 
     [Header("구독할 채널")]
     [SerializeField] private ItemEventChannelSO onBuyItemRequest;
-    [SerializeField] private InventoryEventChannelSO onSellItemRequest;
+    [SerializeField] private InventorySlotEventChannelSO onSellItemRequest;
     [SerializeField] private InventorySlotEventChannelSO onEquipToQuickSlotRequest;
     [SerializeField] private IntEventChannelSO onUseQuickSlotRequest;
     //퀵슬롯 장착 해제 추가
@@ -49,18 +49,18 @@ public class InventoryManager : MonoBehaviour
 
         playerData.AddItemToMainInventory(itemFromShop, 1);
     }
-    private void HandleSellItemRequest(InventorySlotData slotToSell)
+    private void HandleSellItemRequest(InventorySlotData slotToSell, int sellCount)
     {
-        if (!playerData.MainInventory.Contains(slotToSell))
-        {
-            //인벤에 없음.
-            return;
-        }
-        int sellTotal = slotToSell.itemTemplate.sellPrice * slotToSell.itemCount;
-        if (playerData.RemoveItemFromInventory(slotToSell))
-        {
-            playerData.ModifyGold(sellTotal);
-        }
+        if (!playerData.MainInventory.Contains(slotToSell)) return;     //인벤에 없음
+        if (sellCount <= 0) return;
+        if (sellCount > slotToSell.itemCount) return;
+
+        int sellTotal = slotToSell.itemTemplate.sellPrice * sellCount;
+        //수정 중
+        slotToSell.itemCount -= sellCount;
+        playerData.ModifyGold(sellTotal);
+        if (slotToSell.itemCount <= 0) playerData.RemoveItemFromInventory(slotToSell);
+        else playerData.NotifyMainInventoryChange();
     }
     private void HandleEquipToQuickSlotRequest(InventorySlotData slotFromInven, int index)
     {

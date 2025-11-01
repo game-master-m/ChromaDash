@@ -9,6 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70541eb38fa1bfd44b29bdfdbdf12948, type: 3}
+  m_Script: {fileID: 11500000, guid: df53f74893ea3a54ea8f91990e451f61, type: 3}
   m_Name: OnSellItemRequest
   m_EditorClassIdentifier: 

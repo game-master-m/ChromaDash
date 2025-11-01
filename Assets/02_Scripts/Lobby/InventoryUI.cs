@@ -11,7 +11,7 @@ public class InventoryUI : MonoBehaviour
 
     [Header("이벤트 발행")]
     [SerializeField] private InventorySlotEventChannelSO onEquipToQuickSlotRequest; //인벤토리 매니저가 구독
-    [SerializeField] private InventoryEventChannelSO onSellItemRequest;             //인벤토리 매니저가 구독
+    [SerializeField] private InventorySlotEventChannelSO onSellItemRequest;             //인벤토리 매니저가 구독
     [SerializeField] private IntEventChannelSO onUnEquipQuickSlotRequest;           //인벤토리 매니저가 구독
 
     [Header("UI 프리팹 및 부모")]
@@ -28,6 +28,14 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private Image[] quickSlotHighlight;
     [SerializeField] private float targetAlpha = 0.7f;
     [SerializeField] private float fadeDuration = 0.2f;
+
+    [Header("UI 컴포넌트")]
+    [SerializeField] private Button sellButton;
+    [SerializeField] private Button addCountButton;
+    [SerializeField] private Button subCountButton;
+    [SerializeField] private Transform rootForSell;
+    [SerializeField] private TMP_InputField sellCountInputText;
+
     private Coroutine runningFade;
 
     private InventorySlotData selectedItemInstance = null;
@@ -43,6 +51,21 @@ public class InventoryUI : MonoBehaviour
                     quickSlotHighlight[i].color.r, quickSlotHighlight[i].color.g, quickSlotHighlight[i].color.b, 0f);
                 quickSlotHighlight[i].color = oriColor;
             }
+        }
+        if (sellButton != null)
+        {
+            sellButton.onClick.RemoveAllListeners();
+            sellButton.onClick.AddListener(OnClickedSellButton);
+        }
+        if (addCountButton != null)
+        {
+            addCountButton.onClick.RemoveAllListeners();
+            addCountButton.onClick.AddListener(OnClickedAddCountButton);
+        }
+        if (subCountButton != null)
+        {
+            subCountButton.onClick.RemoveAllListeners();
+            subCountButton.onClick.AddListener(OnClickedSubCountButton);
         }
     }
 
@@ -78,12 +101,38 @@ public class InventoryUI : MonoBehaviour
             InventoryItemSlotPrefab slotPrefab = slotGo.GetComponent<InventoryItemSlotPrefab>();
             if (slotPrefab != null)
             {
-                slotPrefab.Init(slotData, OnSelectItem, OnSellItem);
+                slotPrefab.Init(slotData, OnSelectItem);
             }
         }
         selectedItemInstance = null;
         selectedSlotPrefab = null;
         RefreshAllQuickSlots();
+        RefreshMisc(false);
+    }
+    private void RefreshMisc(bool isShow)
+    {
+        rootForSell.gameObject.SetActive(isShow);
+        if (selectedItemInstance != null && isShow)
+        {
+            sellCountInputText.text = $"{selectedItemInstance.itemCount}";
+        }
+    }
+    private void OnClickedAddCountButton()
+    {
+        if (int.TryParse(sellCountInputText.text, out int sellCount))
+        {
+            if (sellCount < selectedItemInstance.itemCount) sellCount++;
+        }
+        sellCountInputText.text = sellCount.ToString();
+
+    }
+    private void OnClickedSubCountButton()
+    {
+        if (int.TryParse(sellCountInputText.text, out int sellCount))
+        {
+            if (sellCount > 1) sellCount--;
+        }
+        sellCountInputText.text = sellCount.ToString();
     }
     private void RefreshSingleQuickSlot(InventorySlotData slotData, int index)
     {
@@ -137,13 +186,20 @@ public class InventoryUI : MonoBehaviour
         selectedItemInstance = slotData;
         selectedSlotPrefab = clickedPrefab;
 
+
+        RefreshMisc(true);
         RefreshAllQuickSlots();
         Debug.Log($"셀렉트! {slotData.itemTemplate.itemName}");
         //효과?
     }
-    private void OnSellItem(InventorySlotData slotData)
+    private void OnSellItem(InventorySlotData slotData, int sellCount)
     {
-        onSellItemRequest.Raised(slotData);
+        onSellItemRequest.Raised(slotData, sellCount);
+    }
+    private void OnClickedSellButton()
+    {
+        if (!int.TryParse(sellCountInputText.text, out int sellCount)) return;
+        OnSellItem(selectedItemInstance, sellCount);
     }
     public void OnClickEquiptToQuickSlot(int index)
     {
