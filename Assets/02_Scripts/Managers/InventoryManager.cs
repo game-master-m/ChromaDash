@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class InventoryManager : MonoBehaviour
 {
@@ -9,12 +10,12 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] private PlayerInventoryData playerData;
 
     [Header("구독할 채널")]
-    [SerializeField] private ItemEventChannelSO onBuyItemRequest;
-    [SerializeField] private InventoryEventChannelSO onSellItemRequest;
+    [SerializeField] private ItemEventChannelSO onBuyItemRequest;       //ShopUI 가 발행
+    [SerializeField] private InventorySlotEventChannelSO onSellItemRequest;
     [SerializeField] private InventorySlotEventChannelSO onEquipToQuickSlotRequest;
     [SerializeField] private IntEventChannelSO onUseQuickSlotRequest;
     //퀵슬롯 장착 해제 추가
-    [SerializeField] private IntEventChannelSO onUnEquipQuickSlotRequest;   //Inventory UI가 발행
+    [SerializeField] private IntEventChannelSO onUnEquipQuickSlotRequest;   //InventoryUI 가 발행
 
     [Header("발행할 채널")]
     [SerializeField] private FloatEventChannelSO onHealPotionRequest;
@@ -49,18 +50,18 @@ public class InventoryManager : MonoBehaviour
 
         playerData.AddItemToMainInventory(itemFromShop, 1);
     }
-    private void HandleSellItemRequest(InventorySlotData slotToSell)
+    private void HandleSellItemRequest(InventorySlotData slotToSell, int sellCount)
     {
-        if (!playerData.MainInventory.Contains(slotToSell))
-        {
-            //인벤에 없음.
-            return;
-        }
-        int sellTotal = slotToSell.itemTemplate.sellPrice * slotToSell.itemCount;
-        if (playerData.RemoveItemFromInventory(slotToSell))
-        {
-            playerData.ModifyGold(sellTotal);
-        }
+        if (!playerData.MainInventory.Contains(slotToSell)) return;     //인벤에 없음
+        if (sellCount <= 0) return;
+        if (sellCount > slotToSell.itemCount) return;
+
+        int sellTotal = slotToSell.itemTemplate.sellPrice * sellCount;
+        //수정 중
+        slotToSell.itemCount -= sellCount;
+        playerData.ModifyGold(sellTotal);
+        if (slotToSell.itemCount <= 0) playerData.RemoveItemFromInventory(slotToSell);
+        else playerData.NotifyMainInventoryChange();
     }
     private void HandleEquipToQuickSlotRequest(InventorySlotData slotFromInven, int index)
     {
@@ -112,6 +113,7 @@ public class InventoryManager : MonoBehaviour
     }
     private void HandleUseQuickSlotRequest(int index)
     {
+        if (SceneManager.GetActiveScene().name != "PlayScene") return;
         InventorySlotData slotInstance = playerData.QuickSlots[index];
 
         if (slotInstance == null || slotInstance.itemTemplate == null) return;
