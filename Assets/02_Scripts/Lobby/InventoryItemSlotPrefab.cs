@@ -23,7 +23,7 @@ public class InventoryItemSlotPrefab : MonoBehaviour
     private Action<InventorySlotData, InventoryItemSlotPrefab> onSelectCallBack;
     //private Action<InventorySlotData> onSellCallBack;
 
-    private Coroutine runningFade;
+    private Coroutine runningFadeCo;
 
     private void Awake()
     {
@@ -58,15 +58,15 @@ public class InventoryItemSlotPrefab : MonoBehaviour
     }
     public void Select()
     {
-        if (runningFade != null) StopCoroutine(runningFade);
+        if (runningFadeCo != null) StopCoroutine(runningFadeCo);
 
-        runningFade = StartCoroutine(FadeHighlight(targetAlpha));
+        runningFadeCo = StartCoroutine(FadeHighlightCo(targetAlpha));
     }
     public void DeSelect()
     {
-        if (runningFade != null) StopCoroutine(runningFade);
+        if (runningFadeCo != null) StopCoroutine(runningFadeCo);
 
-        runningFade = StartCoroutine(FadeHighlight(0.0f));
+        runningFadeCo = StartCoroutine(FadeHighlightCo(0.0f));
     }
     private void OnSelect()
     {
@@ -76,7 +76,7 @@ public class InventoryItemSlotPrefab : MonoBehaviour
     //{
     //    onSellCallBack?.Invoke(slotInstance);
     //}
-    private IEnumerator FadeHighlight(float targetAlpha)
+    private IEnumerator FadeHighlightCo(float targetAlpha)
     {
         float elapsedTime = 0.0f;
         Color currentColor = selectHighligtImage.color;
@@ -92,7 +92,7 @@ public class InventoryItemSlotPrefab : MonoBehaviour
             yield return null;
         }
         selectHighligtImage.color = new Color(currentColor.r, currentColor.g, currentColor.b, targetAlpha);
-        runningFade = null;
+        runningFadeCo = null;
     }
 
 

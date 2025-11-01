@@ -14,7 +14,7 @@ public class InputManager : MonoBehaviour
     public bool IsReLoadPressed { get; private set; }
 
     //이벤트
-    [Header("발행할 이벤트")]
+    [Header("이벤트 발행")]
     [SerializeField] private IntEventChannelSO onUseQuickSlotRequest;
     [SerializeField] private VoidEventChannelSO onPauseRequest;
     private void Awake()

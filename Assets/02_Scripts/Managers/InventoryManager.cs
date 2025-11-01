@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class InventoryManager : MonoBehaviour
 {
@@ -9,12 +10,12 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] private PlayerInventoryData playerData;
 
     [Header("구독할 채널")]
-    [SerializeField] private ItemEventChannelSO onBuyItemRequest;
+    [SerializeField] private ItemEventChannelSO onBuyItemRequest;       //ShopUI 가 발행
     [SerializeField] private InventorySlotEventChannelSO onSellItemRequest;
     [SerializeField] private InventorySlotEventChannelSO onEquipToQuickSlotRequest;
     [SerializeField] private IntEventChannelSO onUseQuickSlotRequest;
     //퀵슬롯 장착 해제 추가
-    [SerializeField] private IntEventChannelSO onUnEquipQuickSlotRequest;   //Inventory UI가 발행
+    [SerializeField] private IntEventChannelSO onUnEquipQuickSlotRequest;   //InventoryUI 가 발행
 
     [Header("발행할 채널")]
     [SerializeField] private FloatEventChannelSO onHealPotionRequest;
@@ -112,6 +113,7 @@ public class InventoryManager : MonoBehaviour
     }
     private void HandleUseQuickSlotRequest(int index)
     {
+        if (SceneManager.GetActiveScene().name != "PlayScene") return;
         InventorySlotData slotInstance = playerData.QuickSlots[index];
 
         if (slotInstance == null || slotInstance.itemTemplate == null) return;

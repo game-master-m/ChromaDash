@@ -10,15 +10,16 @@ public class GameManager : MonoBehaviour
     //[SerializeField] private GameSettingsSO gameSettings;
     //[SerializeField] private LevelDataSO levelData;
 
-    [Header("구독할 이벤트")]
+    [Header("이벤트 구독")]
     [SerializeField] private VoidEventChannelSO onPauseRequest;
     [SerializeField] private VoidEventChannelSO onPlayerDie;
 
-    [Header("발행할 이벤트")]
+    [Header("이벤트 발행")]
     [SerializeField] private VoidEventChannelSO onGameStart;
     [SerializeField] private VoidEventChannelSO onGamePause;
     [SerializeField] private VoidEventChannelSO onGameResume;
     [SerializeField] private VoidEventChannelSO onGameOver;
+
 
     private bool isPause = false;
 
@@ -62,6 +63,7 @@ public class GameManager : MonoBehaviour
     }
     public void TogglePause()
     {
+        if (SceneManager.GetActiveScene().name != "PlayScene") return;
         isPause = !isPause;
         if (isPause)
         {
