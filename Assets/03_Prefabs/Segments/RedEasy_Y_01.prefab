@@ -143,6 +143,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startPoint: {fileID: 8886603288858622177}
+  isDynamicSize: 1
   exitConnectors:
   - jumpStartPoint: {fileID: 492298075755227072}
     eRequiredJump: 1

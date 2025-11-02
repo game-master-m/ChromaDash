@@ -113,7 +113,7 @@ public class PlayerController : MonoBehaviour
 
 
         //test¿ë reLoad
-        if (Input.IsReLoadPressed) SceneManager.LoadScene(0);
+        if (Input.IsReLoadPressed) SceneManager.LoadScene("PlayScene");
     }
     private void FixedUpdate()
     {
@@ -264,11 +264,8 @@ public class PlayerController : MonoBehaviour
                 result = true;
                 break;
             }
-            else
-            {
-                EDetectedColorFromSeg = EChromaColor.None;
-            }
         }
+        if (!result) EDetectedColorFromSeg = EChromaColor.None;
         IsInChromaDashDistance = result;
     }
     #endregion

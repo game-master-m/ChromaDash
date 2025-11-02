@@ -499,7 +499,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &259214847
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1336,7 +1336,7 @@ MonoBehaviour:
   intoGroundDelay: 0.15
   rayLengthForGroundCheck: 0.1
   rayLengthForChromaDash: 0.25
-  runSpeed: 0
+  runSpeed: 5
   hurtSlowSpeed: 2
   chromaDashForce: 5
   jumpForceFirst: 5.2
@@ -3713,7 +3713,7 @@ MonoBehaviour:
   spawnDistance: 20
   initCount: 10
   gridCellSize: {x: 2, y: 1}
-  gridCellSpacingY: 4
+  gridCellSpacingY: 2
   randomXScaleRange: {x: 1, y: 8}
   modeChangeCountEasyToMedium: 100
   maxHeight: 40
