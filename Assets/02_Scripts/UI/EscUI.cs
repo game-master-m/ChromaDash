@@ -17,7 +17,7 @@ public class EscUI : MonoBehaviour
     [SerializeField] private Button goToLobbyButton;
     [SerializeField] private Button showSettingButton;
     [SerializeField] private Button quitButton;
-
+    [SerializeField] private Button resumeButton;
     private void Awake()
     {
         escButton.onClick.RemoveAllListeners();
@@ -28,6 +28,9 @@ public class EscUI : MonoBehaviour
 
         quitButton.onClick.RemoveAllListeners();
         quitButton.onClick.AddListener(() => { Application.Quit(); });
+
+        resumeButton.onClick.RemoveAllListeners();
+        resumeButton.onClick.AddListener(OnClickEscButton);
 
         rootEscPannel.gameObject.SetActive(false);
     }
