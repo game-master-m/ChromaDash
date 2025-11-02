@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 316096945948482879}
   - component: {fileID: 1036422399395094535}
   m_Layer: 0
-  m_Name: GreenEasy_Y_01
+  m_Name: GreenMedium_Y_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

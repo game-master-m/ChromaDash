@@ -18,6 +18,6 @@ public class RhythmFocusStrategy : BasePathStrategy
         {
             return GetSegmentFromList(themeData.easySegments);
         }
-        return GetSegmentFromList(themeData.rhythmSegments);
+        return GetSegmentFromList(themeData.rhythmEasySegments);
     }
 }

@@ -53,11 +53,11 @@ MonoBehaviour:
   isDynamicSize: 1
   exitConnectors:
   - jumpStartPoint: {fileID: 5391960191670209917}
-    eRequiredJump: 1
+    eRequiredJump: 0
   - jumpStartPoint: {fileID: 7422808999092409292}
-    eRequiredJump: 1
+    eRequiredJump: 0
   - jumpStartPoint: {fileID: 4511845200247527650}
-    eRequiredJump: 1
+    eRequiredJump: 0
   sizeInCells: {x: 1, y: 1}
 --- !u!58 &1715222451659650199
 CircleCollider2D:

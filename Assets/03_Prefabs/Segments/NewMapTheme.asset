@@ -12,11 +12,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 734d0651a03c3e64597b7ec5176c1391, type: 3}
   m_Name: NewMapTheme
   m_EditorClassIdentifier: 
-  startSegment: {fileID: 6770310473733110002, guid: 99a6a59547fcfbb42aeab39188e041a3, type: 3}
   easySegments:
   - {fileID: 1953739894404701362, guid: a742fc89b6127b44d94b5b3e6dd3b8a3, type: 3}
   - {fileID: 316096945948482879, guid: 4808ba1207d0e454da0a02c2217e3028, type: 3}
   - {fileID: 3087100255772531297, guid: f3f531ad362bf644e98bc8d097ea3d23, type: 3}
-  mediumSegments: []
-  hardSegments: []
-  rhythmSegments: []
+  mediumSegments:
+  - {fileID: 1953739894404701362, guid: a01d6da3c58fe594daf995aca1b87993, type: 3}
+  - {fileID: 316096945948482879, guid: 034bf2b1781f9104a9a97e7009805e76, type: 3}
+  - {fileID: 3087100255772531297, guid: ce88e5e4aa6a80542b80786ed3b617ea, type: 3}
+  hardSegments:
+  - {fileID: 1953739894404701362, guid: 3204b66ad8298d74fb62b00dee334415, type: 3}
+  - {fileID: 316096945948482879, guid: 84070acfba514934ba94e74710b0a317, type: 3}
+  - {fileID: 3087100255772531297, guid: 9a22dec2600ef284b9f9ce5ab003e08b, type: 3}
+  - {fileID: 1953739894404701362, guid: 7bc95259c33262940a6a4541887fa9dc, type: 3}
+  - {fileID: 316096945948482879, guid: 215e271db63582e4ebfcf06ac4988c70, type: 3}
+  - {fileID: 3087100255772531297, guid: 6562e78b6b7449a44839e1abe09bddae, type: 3}
+  rhythmEasySegments: []
+  rhythmMediumSegments: []
+  rhythmHardSegments: []
+  coinEasySegments:
+  - {fileID: 5606912652258372835, guid: 3dee4060d648c4043a27be476b5c6f7c, type: 3}
+  - {fileID: 8951345075372668214, guid: 6469484d09ce76745aa3597816744827, type: 3}
+  - {fileID: 2109131070732166770, guid: 2edfbbe222937534e8f9cb5a7833cdfe, type: 3}
+  coinMediumSegments: []
+  coinHardSegments: []
+  trapEasySegments: []
+  trapMediumSegments: []
+  trapHardSegments: []

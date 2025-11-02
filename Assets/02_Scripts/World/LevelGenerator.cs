@@ -141,11 +141,15 @@ public class LevelGenerator : MonoBehaviour
         Vector3 newSegmentPos = exitConnector.jumpStartPoint.position + jumpGap;
 
         //random Scale 적용
-        Vector3 newScale = Vector3.one;
+        Vector3 newScale;
         if (prefabToSpawn.isDynamicSize)
         {
             float randomXScale = Random.Range(randomXScaleRange.x, randomXScaleRange.y);
             newScale = new Vector3(randomXScale, 1f, 1f);
+        }
+        else
+        {
+            newScale = prefabToSpawn.transform.localScale;
         }
         //높이 제한조건
         if (newSegmentPos.y > maxHeight || newSegmentPos.y < minHeight) return;
