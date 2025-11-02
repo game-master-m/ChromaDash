@@ -12,6 +12,8 @@ public class MapSegment : MonoBehaviour
 {
     public Transform startPoint;
 
+    //동적 사이즈 적용 유무
+    public bool isDynamicSize;
     //새 맵들이 생성될 곳(여러개)
     public List<ExitConnector> exitConnectors;
 

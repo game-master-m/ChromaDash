@@ -141,9 +141,16 @@ public class LevelGenerator : MonoBehaviour
         Vector3 newSegmentPos = exitConnector.jumpStartPoint.position + jumpGap;
 
         //random Scale 적용
-        float randomeXScale = Random.Range(randomXScaleRange.x, randomXScaleRange.y);
-        Vector3 newScale = new Vector3(randomeXScale, 1f, 1f);
-
+        Vector3 newScale;
+        if (prefabToSpawn.isDynamicSize)
+        {
+            float randomXScale = Random.Range(randomXScaleRange.x, randomXScaleRange.y);
+            newScale = new Vector3(randomXScale, 1f, 1f);
+        }
+        else
+        {
+            newScale = prefabToSpawn.transform.localScale;
+        }
         //높이 제한조건
         if (newSegmentPos.y > maxHeight || newSegmentPos.y < minHeight) return;
         //겹침 방지
@@ -201,7 +208,7 @@ public class LevelGenerator : MonoBehaviour
 
         for (int i = 0; i < xCells; i++)
         {
-            for (int j = 0; j <= yCells; j++)
+            for (int j = -1; j <= yCells; j++)
             {
                 if (occupiedGridCells.Contains(baseCell + new Vector2Int(i, j))) return true;
             }
@@ -232,10 +239,10 @@ public class LevelGenerator : MonoBehaviour
                 xRange = easyJumpXRange;
                 break;
         }
-        float radius = (xRange.y - xRange.x) / 2;
+        float radius = xRange.y - xRange.x;
         Vector2 randomInCircle = Random.insideUnitCircle * radius;
 
-        return new Vector3(randomInCircle.x + xRange.x, randomInCircle.y, 0);
+        return new Vector3(Mathf.Abs(randomInCircle.x) + xRange.x, randomInCircle.y, 0);
     }
 
 

@@ -21,7 +21,7 @@ public class ReadyChromaDashState : PlayerState
     }
     public override void FixedUpdate()
     {
-        base.FixedUpdate();
+        Parent.FixedUpdate();
     }
     public override void Exit()
     {

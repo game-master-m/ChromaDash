@@ -16,6 +16,7 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] private IntEventChannelSO onUseQuickSlotRequest;
     //퀵슬롯 장착 해제 추가
     [SerializeField] private IntEventChannelSO onUnEquipQuickSlotRequest;   //InventoryUI 가 발행
+    [SerializeField] private IntEventChannelSO onGetGold;           //MapSegment 안 coinPrefab 이 발행
 
     [Header("발행할 채널")]
     [SerializeField] private FloatEventChannelSO onHealPotionRequest;
@@ -26,6 +27,7 @@ public class InventoryManager : MonoBehaviour
         onEquipToQuickSlotRequest.OnEvent += HandleEquipToQuickSlotRequest;
         onUseQuickSlotRequest.OnEvent += HandleUseQuickSlotRequest;
         onUnEquipQuickSlotRequest.OnEvent += HandleUnEquipQuickSlotRequest;
+        onGetGold.OnEvent += HandleOnGetGold;
     }
     private void OnDisable()
     {
@@ -34,10 +36,14 @@ public class InventoryManager : MonoBehaviour
         onEquipToQuickSlotRequest.OnEvent -= HandleEquipToQuickSlotRequest;
         onUseQuickSlotRequest.OnEvent -= HandleUseQuickSlotRequest;
         onUnEquipQuickSlotRequest.OnEvent -= HandleUnEquipQuickSlotRequest;
+        onGetGold.OnEvent -= HandleOnGetGold;
     }
 
     //이벤트 핸들러
-
+    private void HandleOnGetGold(int goldAmount)
+    {
+        playerData.ModifyGold(goldAmount);
+    }
     private void HandleBuyItemRequest(ItemData itemFromShop)
     {
         if (playerData.Gold < itemFromShop.buyPrice)
