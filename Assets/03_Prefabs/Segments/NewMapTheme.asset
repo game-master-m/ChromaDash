@@ -34,8 +34,26 @@ MonoBehaviour:
   - {fileID: 5606912652258372835, guid: 3dee4060d648c4043a27be476b5c6f7c, type: 3}
   - {fileID: 8951345075372668214, guid: 6469484d09ce76745aa3597816744827, type: 3}
   - {fileID: 2109131070732166770, guid: 2edfbbe222937534e8f9cb5a7833cdfe, type: 3}
-  coinMediumSegments: []
-  coinHardSegments: []
-  trapEasySegments: []
-  trapMediumSegments: []
-  trapHardSegments: []
+  coinMediumSegments:
+  - {fileID: 2109131070732166770, guid: 187607de2ce86794fbdda74223b6c5c5, type: 3}
+  - {fileID: 2109131070732166770, guid: 13736f2e41fa6164b8cfd0ac3ac28257, type: 3}
+  - {fileID: 2109131070732166770, guid: 3014c8189f4d63c4c822ddffac369ea8, type: 3}
+  coinHardSegments:
+  - {fileID: 2109131070732166770, guid: 40d8009b05e604e489250bc9c5316dbd, type: 3}
+  - {fileID: 2109131070732166770, guid: 2b66cf2a39812644aa29c03367f8aa42, type: 3}
+  - {fileID: 2109131070732166770, guid: 5c7df2c817887994bb62063f3de9b1a1, type: 3}
+  trapEasySegments:
+  - {fileID: 2109131070732166770, guid: 288220e53a8215c42b4baf8532306064, type: 3}
+  - {fileID: 2109131070732166770, guid: ba70951b2107274429fa378becde4454, type: 3}
+  - {fileID: 2109131070732166770, guid: 3d0a588c6dc86944faadcdbc6d5191c5, type: 3}
+  trapMediumSegments:
+  - {fileID: 2109131070732166770, guid: 4149f9743c7f9c64cab464ea8b48cd0a, type: 3}
+  - {fileID: 2109131070732166770, guid: 2f2b8afb572a98741bff4e08ce762684, type: 3}
+  - {fileID: 2109131070732166770, guid: 2cdb4fd341027ca42bad31b8d14b62af, type: 3}
+  - {fileID: 2109131070732166770, guid: fec01162a7d206843bf6b3a44b1e9019, type: 3}
+  - {fileID: 2109131070732166770, guid: b5e34c3f0def5d6469e1a70d0fd51c4e, type: 3}
+  - {fileID: 2109131070732166770, guid: a2e27271e6eabd04d89a89db08f0a2f1, type: 3}
+  trapHardSegments:
+  - {fileID: 2109131070732166770, guid: a993c70b1f216224eb5df6399109d6bb, type: 3}
+  - {fileID: 2109131070732166770, guid: 3bd77c2e1b7e49941ae520309c1e6047, type: 3}
+  - {fileID: 2109131070732166770, guid: 753c7a2d48a65da4986cf44fafec5327, type: 3}

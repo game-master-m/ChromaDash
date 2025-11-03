@@ -17,7 +17,7 @@ public class ReadyChromaDashState : PlayerState
         base.Update();
         if (Managers.Input.IsColorChangeLeftPressed) ComboBonus++;
         if (Managers.Input.IsColorChangeRightPressed) ComboBonus++;
-        CanChromaDashReady = (player.ECurrentColor == player.EDetectedColorFromSeg) ? true : false;
+        CanChromaDashReady = (player.ECurrentColor == player.EDetectedColorFromSeg && player.IsInChromaDashDistance) ? true : false;
     }
     public override void FixedUpdate()
     {

@@ -46,11 +46,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerStatsData: {fileID: 11400000, guid: 72d5494e4e932ff42bcbfef95f7560d2, type: 2}
   gaugeCostPerSec: 1
-  updateGuageUICool: 0.5
+  updateGuageUIDeltaTime: 0.5
   onChromaDashSuccess: {fileID: 11400000, guid: 16f9f5cdfed52ab47a72490c422de5f6, type: 2}
   onPenaltyWhenNoColorMatch: {fileID: 11400000, guid: 9d81321658f846040bd6305f7d2ffa60, type: 2}
   onChromaColorChangeRequest: {fileID: 11400000, guid: ffd0c77a8fbba304b954d1852fe46005, type: 2}
   onHealPotionRequest: {fileID: 11400000, guid: 4fa46fbf11afd364996950a146b7bf30, type: 2}
   onGameStart: {fileID: 11400000, guid: e75e8dd0bddee4b4096fe88732b4e6a4, type: 2}
   onGameOver: {fileID: 11400000, guid: 7fdbd8c670750164f9e6a09f97929b6e, type: 2}
+  onTimeSlowTrappedRequest: {fileID: 11400000, guid: 039b007a56492f54d92cdcdf0eafae13, type: 2}
+  onTimeSlowExit: {fileID: 11400000, guid: 7635e38153f7c2c4e8a169323c3a5251, type: 2}
   onPlayerDie: {fileID: 11400000, guid: a153982e656b7de4582317686fdc8e2f, type: 2}

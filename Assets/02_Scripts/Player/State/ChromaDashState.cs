@@ -9,6 +9,7 @@ public class ChromaDashState : PlayerState
     {
         base.Enter();
         player.IsChromaDash = true;
+        player.WasJumpedOnGround = false;
         player.Move.AddForceImpulseX(player.ChromaDashForce);
         player.Anim.PlayAnim(AnimHash.fastRunHash);
         dashTimeCo = player.StartCoroutine(ChromaDashTimeCo(player.ChromaDashTime));
