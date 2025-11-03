@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float jumpFirceContinueDuration = 1.2f;
     [Header("크로마대쉬 관련")]
     [SerializeField] private float chromaDashTime = 1.0f;
-    [SerializeField] private float chromaToRunTransitionTValue = 5.0f;
+    [SerializeField] private float chromaToRunTransitionTValue = 2.0f;
     [SerializeField] private float hurtToRunTransitionTValue = 2.0f;
     [Header("게이지 관련")]
     [SerializeField] private float chromaDashSuccessRewardAmount = 5.0f;
@@ -47,6 +47,12 @@ public class PlayerController : MonoBehaviour
     [Header("이벤트 발행")]
     [SerializeField] private FloatEventChannelSO onPenaltyWhenNoColorMatch;
     [SerializeField] private FloatEventChannelSO onChromaDashSuccess;
+    [SerializeField] private FloatEventChannelSO onTimeSlowTrappedRequest;          //PlayerStatsManager에서 구독
+    [Header("이벤트 구독")]
+    [SerializeField] private VoidEventChannelSO onColorForcedChangeLeft;        //ColorChangeTrap에서 발행
+    [SerializeField] private VoidEventChannelSO onColorForcedChangeRight;       //ColorChangeTrap에서 발행
+    [SerializeField] private FloatEventChannelSO onTimeSlowEnter;               //TimeSlowTrap에서 발행
+    [SerializeField] private VoidEventChannelSO onTimeSlowExit;                 //TimeSlowTrap에서 발행
 
     //인스펙터 조절변수 Getter
     public FloatEventChannelSO OnPenaltyWhenNoColorMatch { get { return onPenaltyWhenNoColorMatch; } }
@@ -74,6 +80,10 @@ public class PlayerController : MonoBehaviour
 
     private bool isChromaDashBetweenGroundToDelayed = false;
 
+    //맵 효과
+    private bool isInTimeSlowTrap = false;
+    private float timeSlowFactor;
+
     private void Awake()
     {
         //컴포넌트
@@ -95,6 +105,7 @@ public class PlayerController : MonoBehaviour
         hurtState = new HurtState(this);
 
         AddTransitions();
+
         //
     }
     private void Start()
@@ -102,7 +113,18 @@ public class PlayerController : MonoBehaviour
         Input = Managers.Input;
         StateMachine.ChangeState(airState);
 
-        //이벤트
+        //이벤트 구독
+        onColorForcedChangeLeft.OnEvent += ChangeColorAsKeyLeft;
+        onColorForcedChangeRight.OnEvent += ChangeColorAsKeyRight;
+        onTimeSlowEnter.OnEvent += OnTimeSlowEnter;
+        onTimeSlowExit.OnEvent += OnTimeSlowExit;
+    }
+    private void OnDestroy()
+    {
+        onColorForcedChangeLeft.OnEvent -= ChangeColorAsKeyLeft;
+        onColorForcedChangeRight.OnEvent -= ChangeColorAsKeyRight;
+        onTimeSlowEnter.OnEvent -= OnTimeSlowEnter;
+        onTimeSlowExit.OnEvent -= OnTimeSlowExit;
     }
     void Update()
     {
@@ -120,6 +142,7 @@ public class PlayerController : MonoBehaviour
         StateMachine.FixedUpdate();
         RunSpeedControl();
     }
+    #region Transition Method
     private void AddTransitions()
     {
         StateMachine.AddTransition(airState, groundState,
@@ -138,14 +161,14 @@ public class PlayerController : MonoBehaviour
         StateMachine.AddTransition(readyChromaDashState, jumpInAirState, new Func<bool>(DoChangeStateAirToJump));
         StateMachine.AddTransition(chromaDashState, groundState, () => !IsChromaDash);
         StateMachine.AddTransition(chromaDashState, jumpOnGroundState, () => Input.IsJumpPressed && IsGround);
-        StateMachine.AddTransition(chromaDashState, jumpInAirState, () => Input.IsJumpPressed && !IsGround);
+        //StateMachine.AddTransition(chromaDashState, jumpInAirState, () => Input.IsJumpPressed && !IsGround);
+        StateMachine.AddTransition(chromaDashState, airState, () => !IsGround);
         StateMachine.AddTransition(hurtState, airState, () => hurtState.IsHurtEnd);
 
         //Any
         StateMachine.AddAnyTransition(hurtState,
             () => IsDelayedGround && ECurrentColor != EDetectedColorFromSeg && !(StateMachine.CurrentState is HurtState));
     }
-    #region Transition Method
     public bool DoChangeStateJumpOnGroundToJump()
     {
         if (Input.IsJumpPressed)
@@ -202,12 +225,26 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+    #region 이벤트 핸들러들
+    private void OnTimeSlowEnter(float tFromTimeSlowTrap)
+    {
+        isInTimeSlowTrap = true;
+        timeSlowFactor = tFromTimeSlowTrap;
+    }
+    private void OnTimeSlowExit()
+    {
+        isInTimeSlowTrap = false;
+    }
+
+    #endregion
+
+    #region 감지들
     IEnumerator IntoGroundDelay(float t)
     {
         yield return new WaitForSeconds(t);
         IsDelayedGround = true;
     }
-    #region 감지들
     private void GroundCheck()
     {
         bool result = false;
@@ -245,6 +282,10 @@ public class PlayerController : MonoBehaviour
             WasSecondJumpedInAir = false;
             //크로마 감지들 초기화
             IsInChromaDashDistance = false;
+            //시간감속 트랩 발동 ---------------
+            if (isInTimeSlowTrap && !IsChromaDash) onTimeSlowTrappedRequest.Raised(timeSlowFactor);
+            else if (isInTimeSlowTrap && IsChromaDash) isInTimeSlowTrap = false;
+            // -------------------------------
         }
     }
     //AirState FixedUpdate()에서 검사

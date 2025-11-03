@@ -19,12 +19,17 @@ public class PlayerStatsManager : MonoBehaviour
     //GameManager관련
     [SerializeField] private VoidEventChannelSO onGameStart;
     [SerializeField] private VoidEventChannelSO onGameOver;
+    //TimeSlowTrap관련
+    [SerializeField] private FloatEventChannelSO onTimeSlowTrappedRequest;  //PlayerController 가 발행
+    [SerializeField] private VoidEventChannelSO onTimeSlowExit;             //TimeSlowTrap 이 발행
 
     [Header("발행할 채널")]
     [SerializeField] private VoidEventChannelSO onPlayerDie;
 
     private bool isPlaying = false;
     private Coroutine updateGuaugeCoolCo;
+
+    private bool isRealTimeGuageDecrease = false;
     private void Start()
     {
         playerStatsData.Init();
@@ -32,23 +37,46 @@ public class PlayerStatsManager : MonoBehaviour
 
     private void OnEnable()
     {
-        onChromaDashSuccess.onEvent += HandleSuccessReward;
-        onHealPotionRequest.onEvent += HandleSuccessReward;
-        onPenaltyWhenNoColorMatch.onEvent += HandlePenalty;
+        onChromaDashSuccess.OnEvent += HandleSuccessReward;
+        onHealPotionRequest.OnEvent += HandleSuccessReward;
+        onPenaltyWhenNoColorMatch.OnEvent += HandlePenalty;
         onChromaColorChangeRequest.onEvent += HandleColorChange;
 
         //GameManager 관련
         onGameStart.OnEvent += HandleGameStart;
         onGameOver.OnEvent += HandleGameOver;
+        //TimeSlowTrap 관련
+        onTimeSlowExit.OnEvent += HandleTimeSlowTrapEscape;
+        onTimeSlowTrappedRequest.OnEvent += HandleTimeSlowTrapped;
+        onChromaDashSuccess.OnEvent += HandleTimeSlowTrapEscape;
     }
     private void OnDisable()
     {
-        onChromaDashSuccess.onEvent -= HandleSuccessReward;
-        onHealPotionRequest.onEvent -= HandleSuccessReward;
-        onPenaltyWhenNoColorMatch.onEvent -= HandlePenalty;
+        onChromaDashSuccess.OnEvent -= HandleSuccessReward;
+        onHealPotionRequest.OnEvent -= HandleSuccessReward;
+        onPenaltyWhenNoColorMatch.OnEvent -= HandlePenalty;
         onChromaColorChangeRequest.onEvent -= HandleColorChange;
         onGameStart.OnEvent -= HandleGameStart;
         onGameOver.OnEvent -= HandleGameOver;
+        onTimeSlowTrappedRequest.OnEvent -= HandleTimeSlowTrapped;
+        onTimeSlowExit.OnEvent -= HandleTimeSlowTrapEscape;
+        onChromaDashSuccess.OnEvent -= HandleTimeSlowTrapEscape;
+    }
+    private void HandleTimeSlowTrapped(float slowFactor)
+    {
+        //TimeScalse은 느려지는데 TimeGuage는 그대로 감소
+        isRealTimeGuageDecrease = true;
+        Time.timeScale = slowFactor;
+    }
+    private void HandleTimeSlowTrapEscape(float garbage)
+    {
+        isRealTimeGuageDecrease = false;
+        Time.timeScale = 1.0f;
+    }
+    private void HandleTimeSlowTrapEscape()
+    {
+        isRealTimeGuageDecrease = false;
+        Time.timeScale = 1.0f;
     }
     public void HandleGameStart()
     {
@@ -79,7 +107,8 @@ public class PlayerStatsManager : MonoBehaviour
     {
         while (isPlaying)
         {
-            yield return new WaitForSeconds(deltTime);
+            if (isRealTimeGuageDecrease) yield return new WaitForSecondsRealtime(deltTime);
+            else yield return new WaitForSeconds(deltTime);
             bool isTimesUp = playerStatsData.UpdataGauge(gaugeCostPerSec * deltTime);
             if (isTimesUp)
             {

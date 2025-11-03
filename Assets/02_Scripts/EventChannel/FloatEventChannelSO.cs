@@ -4,9 +4,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewFloatEventChannel", menuName = "ChromaDash/Events/Float Event Channel")]
 public class FloatEventChannelSO : ScriptableObject
 {
-    public event Action<float> onEvent;
+    public event Action<float> OnEvent;
     public void Raised(float value)
     {
-        onEvent?.Invoke(value);
+        OnEvent?.Invoke(value);
     }
 }

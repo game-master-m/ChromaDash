@@ -14,6 +14,7 @@ public class JumpOnGroundState : PlayerState
     private bool isPressing = false;
     private bool isPressingEnd = false;
 
+    private float velocityRateWhenJumpPressingEnd = 0.85f;
     public bool DoChangeStateJumpOnGroundToAirIdle { get; private set; } = false;
     public override void Enter()
     {
@@ -31,7 +32,7 @@ public class JumpOnGroundState : PlayerState
     public override void Update()
     {
         base.Update();
-        if (Managers.Input.IsJumpPressing)
+        if (Managers.Input.IsJumpPressing && !isPressingEnd)
         {
             isPressing = true;
         }
@@ -54,6 +55,7 @@ public class JumpOnGroundState : PlayerState
             player.Move.AddForceYLerpYEaseIn(player.JumpForceContinue,
                 player.JumpForceHover, player.JumpFirceContinueDuration, elapsedTime);
         }
+        else player.Move.SetVelocityY(player.Move.GetVelocityY() * velocityRateWhenJumpPressingEnd);
     }
     public override void Exit()
     {
@@ -65,6 +67,8 @@ public class JumpOnGroundState : PlayerState
         DoChangeStateJumpOnGroundToAirIdle = false;
         isPressingEnd = false;
         elapsedTime = 0.0f;
+
+        player.Move.SetVelocityY(player.Move.GetVelocityY() * velocityRateWhenJumpPressingEnd);
     }
     IEnumerator DelayClipLengthCo()
     {

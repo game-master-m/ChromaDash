@@ -22,7 +22,7 @@ public enum EChromaColor
 }
 public enum ELayerName
 {
-    Default, TransparentFX, IgnoreRaycast, Ground, Water, UI, Player
+    Default, TransparentFX, IgnoreRaycast, Ground, Water, UI, Player, Trap
 }
 public enum EPatterDifficulty
 {
@@ -45,4 +45,9 @@ public enum EItemType
     SlowHeal,
     SpeedUp,
     SmallHeal
+}
+
+public enum EColorChangeTrap
+{
+    Right, Left
 }

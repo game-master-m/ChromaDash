@@ -47,11 +47,13 @@ public class LevelGenerator : MonoBehaviour
     //캐싱
     private EasyStrategy easyStrategy;
     private MediumStrategy mediumStrategy;
+    private HardStrategy hardStrategy;
     private RhythmFocusStrategy rhythmFocusStrategy;
     private void Awake()
     {
         easyStrategy = new EasyStrategy();
         mediumStrategy = new MediumStrategy();
+        hardStrategy = new HardStrategy();
         rhythmFocusStrategy = new RhythmFocusStrategy();
     }
     private void Start()
@@ -64,7 +66,7 @@ public class LevelGenerator : MonoBehaviour
         //1.풀 매니저에 등록
         InitPool();
         //2.초기 전략 설정
-        currentStrategy = easyStrategy;
+        currentStrategy = hardStrategy;
         SpawnStartSegment();
     }
     private void InitPool()
@@ -102,7 +104,7 @@ public class LevelGenerator : MonoBehaviour
         //가까워지면 추가
         foreach (ExitConnector connector in openConnectors)
         {
-            if (Vector2.Distance(player.position, connector.jumpStartPoint.position) < spawnDistance)
+            if ((connector.jumpStartPoint.position.x - player.position.x) < spawnDistance)
             {
                 connectorsToSpawn.Add(connector);
             }
@@ -177,40 +179,85 @@ public class LevelGenerator : MonoBehaviour
         Vector2Int baseCell = WorldToGridCell(worldPos);
         Vector3 currentScale = segment.transform.localScale;
         int xCells = Mathf.CeilToInt(segment.sizeInCells.x * currentScale.x);
-        int yCells = Mathf.CeilToInt(segment.sizeInCells.y * currentScale.y);
-        for (int i = 0; i <= xCells; i++)
+        int yCells = 0;
+        if (segment.sizeInCells.y >= 0)
         {
-            for (int j = -gridCellSpacingY / 2; j < yCells + gridCellSpacingY; j++)
+            yCells = Mathf.CeilToInt(segment.sizeInCells.y * currentScale.y);
+            for (int i = 0; i <= xCells; i++)
             {
-                occupiedGridCells.Add(baseCell + new Vector2Int(i, j));
+                for (int j = -gridCellSpacingY; j < yCells + gridCellSpacingY; j++)
+                {
+                    occupiedGridCells.Add(baseCell + new Vector2Int(i, j));
+                }
             }
         }
+        else
+        {
+            yCells = Mathf.FloorToInt(segment.sizeInCells.y * currentScale.y);
+            for (int i = 0; i <= xCells; i++)
+            {
+                for (int j = yCells - gridCellSpacingY; j < gridCellSpacingY; j++)
+                {
+                    occupiedGridCells.Add(baseCell + new Vector2Int(i, j));
+                }
+            }
+        }
+        occupiedGridCells.Add(baseCell + new Vector2Int(xCells + 1, yCells));   //끝 앞 두칸째
     }
     private void UnregisterOccupiedCells(MapSegment segment)
     {
         Vector2Int baseCell = WorldToGridCell(segment.transform.position);
         Vector3 currentScale = segment.transform.localScale;
         int xCells = Mathf.CeilToInt(currentScale.x * segment.sizeInCells.x);
-        int yCells = Mathf.CeilToInt(currentScale.y * segment.sizeInCells.y);
-        for (int i = 0; i < xCells; i++)
+        int yCells = 0;
+        if (segment.sizeInCells.y >= 0)
         {
-            for (int j = 0; j < yCells; j++)
+            yCells = Mathf.CeilToInt(currentScale.y * segment.sizeInCells.y);
+            for (int i = 0; i <= xCells; i++)
             {
-                occupiedGridCells.Remove(baseCell + new Vector2Int(i, j));
+                for (int j = gridCellSpacingY; j < yCells + gridCellSpacingY; j++)
+                {
+                    occupiedGridCells.Remove(baseCell + new Vector2Int(i, j));
+                }
             }
         }
+        else
+        {
+            yCells = Mathf.FloorToInt(segment.sizeInCells.y * currentScale.y);
+            for (int i = 0; i <= xCells; i++)
+            {
+                for (int j = yCells - gridCellSpacingY; j < gridCellSpacingY; j++)
+                {
+                    occupiedGridCells.Remove(baseCell + new Vector2Int(i, j));
+                }
+            }
+        }
+        occupiedGridCells.Remove(baseCell + new Vector2Int(xCells + 1, yCells));    //끝 앞 두칸째
     }
     private bool CheckForOverlap(MapSegment segment, Vector3 worldPos, Vector3 scaleToApply)
     {
         Vector2Int baseCell = WorldToGridCell(worldPos);
         int xCells = Mathf.CeilToInt(scaleToApply.x * segment.sizeInCells.x);
-        int yCells = Mathf.CeilToInt(scaleToApply.y * segment.sizeInCells.y);
-
-        for (int i = 0; i < xCells; i++)
+        if (segment.sizeInCells.y >= 0)
         {
-            for (int j = -1; j <= yCells; j++)
+            int yCells = Mathf.CeilToInt(scaleToApply.y * segment.sizeInCells.y);
+            for (int i = 0; i < xCells; i++)
             {
-                if (occupiedGridCells.Contains(baseCell + new Vector2Int(i, j))) return true;
+                for (int j = 0; j < yCells; j++)
+                {
+                    if (occupiedGridCells.Contains(baseCell + new Vector2Int(i, j))) return true;
+                }
+            }
+        }
+        else
+        {
+            int yCells = Mathf.FloorToInt(scaleToApply.y * segment.sizeInCells.y);
+            for (int i = 0; i < xCells; i++)
+            {
+                for (int j = yCells; j < 0; j++)
+                {
+                    if (occupiedGridCells.Contains(baseCell + new Vector2Int(i, j))) return true;
+                }
             }
         }
         return false;
