@@ -48,6 +48,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private FloatEventChannelSO onPenaltyWhenNoColorMatch;
     [SerializeField] private FloatEventChannelSO onChromaDashSuccess;
     [SerializeField] private FloatEventChannelSO onTimeSlowTrappedRequest;          //PlayerStatsManager에서 구독
+    [SerializeField] private EChromaColorEventChannelSO onChromaColorChangeRequest; //PlayerStatsManager에서 구독
     [Header("이벤트 구독")]
     [SerializeField] private VoidEventChannelSO onColorForcedChangeLeft;        //ColorChangeTrap에서 발행
     [SerializeField] private VoidEventChannelSO onColorForcedChangeRight;       //ColorChangeTrap에서 발행
@@ -330,11 +331,11 @@ public class PlayerController : MonoBehaviour
                 break;
         }
         Anim.ChangeColor(ECurrentColor);
-        GameEvents.RaiseOnChromaColorChanged(ECurrentColor);
         if (readyChromaDashState.CanChromaDashReady && IsGround && !IsDelayedGround && ECurrentColor == EDetectedColorFromSeg)
         {
             isChromaDashBetweenGroundToDelayed = true;
         }
+        onChromaColorChangeRequest.Rasied(ECurrentColor);
     }
     private void ChangeColorAsKeyRight()
     {
@@ -354,7 +355,11 @@ public class PlayerController : MonoBehaviour
                 break;
         }
         Anim.ChangeColor(ECurrentColor);
-        GameEvents.RaiseOnChromaColorChanged(ECurrentColor);
+        if (readyChromaDashState.CanChromaDashReady && IsGround && !IsDelayedGround && ECurrentColor == EDetectedColorFromSeg)
+        {
+            isChromaDashBetweenGroundToDelayed = true;
+        }
+        onChromaColorChangeRequest.Rasied(ECurrentColor);
     }
     #endregion
 

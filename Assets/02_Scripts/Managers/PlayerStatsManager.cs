@@ -24,7 +24,7 @@ public class PlayerStatsManager : MonoBehaviour
     [SerializeField] private VoidEventChannelSO onTimeSlowExit;             //TimeSlowTrap 이 발행
 
     [Header("발행할 채널")]
-    [SerializeField] private VoidEventChannelSO onPlayerDie;
+    [SerializeField] private VoidEventChannelSO onPlayerDie;        //GameManager 가 구독
 
     private bool isPlaying = false;
     private Coroutine updateGuaugeCoolCo;
