@@ -8,8 +8,13 @@ public class CoinWatcher : MonoBehaviour
 
     private void OnEnable()
     {
+        if (coinPrefabs == null || coinPrefabs.Count == 0)
+        {
+            return;
+        }
         foreach (var coin in coinPrefabs)
         {
+            if (coin == null) continue;
             coin.gameObject.SetActive(true);
         }
     }

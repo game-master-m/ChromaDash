@@ -16,6 +16,7 @@ public class LevelGenerator : MonoBehaviour
     [Header("겹침 방지 설정")]
     [SerializeField] private Vector2Int gridCellSize = new Vector2Int(2, 1);
     [SerializeField] private int gridCellSpacingY = 4;
+    [SerializeField] private int gridCellSpacingX = 2;
 
     [Header("동적 사이즈 변화")]
     [SerializeField] private Vector2 randomXScaleRange = new Vector2(1.0f, 5.0f);
@@ -183,7 +184,7 @@ public class LevelGenerator : MonoBehaviour
         if (segment.sizeInCells.y >= 0)
         {
             yCells = Mathf.CeilToInt(segment.sizeInCells.y * currentScale.y);
-            for (int i = 0; i <= xCells; i++)
+            for (int i = 0; i < xCells + gridCellSpacingX; i++)
             {
                 for (int j = -gridCellSpacingY; j < yCells + gridCellSpacingY; j++)
                 {
@@ -194,15 +195,15 @@ public class LevelGenerator : MonoBehaviour
         else
         {
             yCells = Mathf.FloorToInt(segment.sizeInCells.y * currentScale.y);
-            for (int i = 0; i <= xCells; i++)
+            for (int i = 0; i < xCells + gridCellSpacingX; i++)
             {
-                for (int j = yCells - gridCellSpacingY; j < gridCellSpacingY; j++)
+                for (int j = yCells - gridCellSpacingY; j <= gridCellSpacingY; j++)
                 {
                     occupiedGridCells.Add(baseCell + new Vector2Int(i, j));
                 }
             }
         }
-        occupiedGridCells.Add(baseCell + new Vector2Int(xCells + 1, yCells));   //끝 앞 두칸째
+
     }
     private void UnregisterOccupiedCells(MapSegment segment)
     {
@@ -213,7 +214,7 @@ public class LevelGenerator : MonoBehaviour
         if (segment.sizeInCells.y >= 0)
         {
             yCells = Mathf.CeilToInt(currentScale.y * segment.sizeInCells.y);
-            for (int i = 0; i <= xCells; i++)
+            for (int i = 0; i < xCells + gridCellSpacingX; i++)
             {
                 for (int j = gridCellSpacingY; j < yCells + gridCellSpacingY; j++)
                 {
@@ -224,15 +225,14 @@ public class LevelGenerator : MonoBehaviour
         else
         {
             yCells = Mathf.FloorToInt(segment.sizeInCells.y * currentScale.y);
-            for (int i = 0; i <= xCells; i++)
+            for (int i = 0; i < xCells + gridCellSpacingX; i++)
             {
-                for (int j = yCells - gridCellSpacingY; j < gridCellSpacingY; j++)
+                for (int j = yCells - gridCellSpacingY; j <= gridCellSpacingY; j++)
                 {
                     occupiedGridCells.Remove(baseCell + new Vector2Int(i, j));
                 }
             }
         }
-        occupiedGridCells.Remove(baseCell + new Vector2Int(xCells + 1, yCells));    //끝 앞 두칸째
     }
     private bool CheckForOverlap(MapSegment segment, Vector3 worldPos, Vector3 scaleToApply)
     {
