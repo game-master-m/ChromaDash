@@ -26,6 +26,7 @@ public class JumpInAirState : PlayerState
         player.Move.SetVelocityY(0.0f);
         player.Move.AddForceImpulseY(player.JumpForceFirst);
         delayClipLengthCo = player.StartCoroutine(DelayClipLengthCo());
+        player.OnJumpSuccess.Raised();
     }
     public override void Update()
     {

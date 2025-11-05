@@ -24,7 +24,7 @@ public class PlayerStatsManager : MonoBehaviour
     [SerializeField] private VoidEventChannelSO onTimeSlowExit;             //TimeSlowTrap 이 발행
 
     [Header("발행할 채널")]
-    [SerializeField] private VoidEventChannelSO onPlayerDie;
+    [SerializeField] private VoidEventChannelSO onPlayerDie;        //GameManager 가 구독
 
     private bool isPlaying = false;
     private Coroutine updateGuaugeCoolCo;
@@ -40,7 +40,7 @@ public class PlayerStatsManager : MonoBehaviour
         onChromaDashSuccess.OnEvent += HandleSuccessReward;
         onHealPotionRequest.OnEvent += HandleSuccessReward;
         onPenaltyWhenNoColorMatch.OnEvent += HandlePenalty;
-        onChromaColorChangeRequest.onEvent += HandleColorChange;
+        onChromaColorChangeRequest.OnEvent += HandleColorChange;
 
         //GameManager 관련
         onGameStart.OnEvent += HandleGameStart;
@@ -55,7 +55,7 @@ public class PlayerStatsManager : MonoBehaviour
         onChromaDashSuccess.OnEvent -= HandleSuccessReward;
         onHealPotionRequest.OnEvent -= HandleSuccessReward;
         onPenaltyWhenNoColorMatch.OnEvent -= HandlePenalty;
-        onChromaColorChangeRequest.onEvent -= HandleColorChange;
+        onChromaColorChangeRequest.OnEvent -= HandleColorChange;
         onGameStart.OnEvent -= HandleGameStart;
         onGameOver.OnEvent -= HandleGameOver;
         onTimeSlowTrappedRequest.OnEvent -= HandleTimeSlowTrapped;
