@@ -40,7 +40,7 @@ public class PlayerStatsManager : MonoBehaviour
         onChromaDashSuccess.OnEvent += HandleSuccessReward;
         onHealPotionRequest.OnEvent += HandleSuccessReward;
         onPenaltyWhenNoColorMatch.OnEvent += HandlePenalty;
-        onChromaColorChangeRequest.onEvent += HandleColorChange;
+        onChromaColorChangeRequest.OnEvent += HandleColorChange;
 
         //GameManager ฐüทร
         onGameStart.OnEvent += HandleGameStart;
@@ -55,7 +55,7 @@ public class PlayerStatsManager : MonoBehaviour
         onChromaDashSuccess.OnEvent -= HandleSuccessReward;
         onHealPotionRequest.OnEvent -= HandleSuccessReward;
         onPenaltyWhenNoColorMatch.OnEvent -= HandlePenalty;
-        onChromaColorChangeRequest.onEvent -= HandleColorChange;
+        onChromaColorChangeRequest.OnEvent -= HandleColorChange;
         onGameStart.OnEvent -= HandleGameStart;
         onGameOver.OnEvent -= HandleGameOver;
         onTimeSlowTrappedRequest.OnEvent -= HandleTimeSlowTrapped;

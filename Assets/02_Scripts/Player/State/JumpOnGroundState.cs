@@ -27,7 +27,6 @@ public class JumpOnGroundState : PlayerState
         player.Move.AddForceImpulseY(player.JumpForceFirst);
         delayClipLenthCo = player.StartCoroutine(DelayClipLengthCo());
 
-
     }
     public override void Update()
     {

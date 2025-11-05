@@ -49,13 +49,17 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private FloatEventChannelSO onChromaDashSuccess;
     [SerializeField] private FloatEventChannelSO onTimeSlowTrappedRequest;          //PlayerStatsManager에서 구독
     [SerializeField] private EChromaColorEventChannelSO onChromaColorChangeRequest; //PlayerStatsManager에서 구독
+    [SerializeField] private VoidEventChannelSO onJumpSuccess;                      //ChromaBoostFeedback에서 구독, JumpInAirState에서 발행
+
     [Header("이벤트 구독")]
     [SerializeField] private VoidEventChannelSO onColorForcedChangeLeft;        //ColorChangeTrap에서 발행
     [SerializeField] private VoidEventChannelSO onColorForcedChangeRight;       //ColorChangeTrap에서 발행
     [SerializeField] private FloatEventChannelSO onTimeSlowEnter;               //TimeSlowTrap에서 발행
     [SerializeField] private VoidEventChannelSO onTimeSlowExit;                 //TimeSlowTrap에서 발행
-
+    [SerializeField] private VoidEventChannelSO onGamePause;                     //GameManager에서 발행
+    [SerializeField] private VoidEventChannelSO onGameResume;                    //GameManager에서 발행
     //인스펙터 조절변수 Getter
+    public VoidEventChannelSO OnJumpSuccess { get { return onJumpSuccess; } }
     public FloatEventChannelSO OnPenaltyWhenNoColorMatch { get { return onPenaltyWhenNoColorMatch; } }
     public FloatEventChannelSO OnChromaDashSuccess { get { return onChromaDashSuccess; } }
     public float ChromaDashSuccesRewardAmount { get { return chromaDashSuccessRewardAmount; } }
@@ -85,6 +89,8 @@ public class PlayerController : MonoBehaviour
     private bool isInTimeSlowTrap = false;
     private float timeSlowFactor;
 
+    //GameManager 관련
+    private bool isGamePaused = false;
     private void Awake()
     {
         //컴포넌트
@@ -119,6 +125,8 @@ public class PlayerController : MonoBehaviour
         onColorForcedChangeRight.OnEvent += ChangeColorAsKeyRight;
         onTimeSlowEnter.OnEvent += OnTimeSlowEnter;
         onTimeSlowExit.OnEvent += OnTimeSlowExit;
+        onGamePause.OnEvent += () => { isGamePaused = true; };
+        onGameResume.OnEvent += () => { isGamePaused = false; };
     }
     private void OnDestroy()
     {
@@ -126,13 +134,18 @@ public class PlayerController : MonoBehaviour
         onColorForcedChangeRight.OnEvent -= ChangeColorAsKeyRight;
         onTimeSlowEnter.OnEvent -= OnTimeSlowEnter;
         onTimeSlowExit.OnEvent -= OnTimeSlowExit;
+        onGamePause.OnEvent -= () => { isGamePaused = true; };
+        onGameResume.OnEvent += () => { isGamePaused = false; };
     }
     void Update()
     {
         GroundCheck();
-        StateMachine.Update();
-        if (Input.IsColorChangeLeftPressed) ChangeColorAsKeyLeft();
-        if (Input.IsColorChangeRightPressed) ChangeColorAsKeyRight();
+        if (!isGamePaused)
+        {
+            StateMachine.Update();
+            if (Input.IsColorChangeLeftPressed) ChangeColorAsKeyLeft();
+            if (Input.IsColorChangeRightPressed) ChangeColorAsKeyRight();
+        }
 
 
         //test용 reLoad
