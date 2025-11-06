@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
 
     [Header("이벤트 구독")]
     [SerializeField] private VoidEventChannelSO onPauseRequest;
-    [SerializeField] private VoidEventChannelSO onPlayerDie;
+    [SerializeField] private VoidEventChannelSO onPlayerDie;    //PlayerStatsManager 가 발행
 
     [Header("이벤트 발행")]
     [SerializeField] private VoidEventChannelSO onGameStart;
@@ -22,10 +22,9 @@ public class GameManager : MonoBehaviour
 
 
     private bool isPause = false;
-
+    private bool isGameOver = false;
     private void Start()
     {
-        //LoadPlayScene();
         LoadLobbyScene();
     }
     private void OnEnable()
@@ -44,26 +43,32 @@ public class GameManager : MonoBehaviour
     }
     public void HandleOnSceneLoad(Scene scene, LoadSceneMode mode)
     {
+        isPause = false;
+        isGameOver = false;
         if (scene.name == playSceneName)
         {
+            Time.timeScale = 1.0f;
             if (onGameStart != null) onGameStart.Raised();
         }
     }
     public void LoadPlayScene()
     {
         Time.timeScale = 1.0f;
-        isPause = false;
         SceneManager.LoadScene(playSceneName);
     }
     public void LoadLobbyScene()
     {
         Time.timeScale = 1.0f;
-        isPause = false;
         SceneManager.LoadScene(lobbySceneName);
     }
     public void TogglePause()
     {
-        if (SceneManager.GetActiveScene().name != "PlayScene") return;
+        if (SceneManager.GetActiveScene().name != playSceneName) return;
+        if (isGameOver)
+        {
+            LoadPlayScene();
+            return;
+        }
         isPause = !isPause;
         if (isPause)
         {
@@ -78,7 +83,8 @@ public class GameManager : MonoBehaviour
     }
     public void HandleGameOver()
     {
-        Time.timeScale = 0.5f;
+        Time.timeScale = 0.8f;
+        isGameOver = true;
         onGameOver.Raised();
     }
 }

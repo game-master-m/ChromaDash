@@ -167,6 +167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10cd7656020689f4c95c6a573abe8db7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dataManagerPrefab: {fileID: 3049064649442686379, guid: a57c8c4f77458b441869e4bada468ccb, type: 3}
   poolManagerPrefab: {fileID: 479443267116594878, guid: b5f4d4039139de646aa724bec5194c5e, type: 3}
   inputManagerPrefab: {fileID: 1490915228444278228, guid: 281d6c25f6aeaa948be1ae095657aee2, type: 3}
   gameManagerPrefab: {fileID: 3166988296276645689, guid: f31a34282cc968a4ea2c693524812c71, type: 3}

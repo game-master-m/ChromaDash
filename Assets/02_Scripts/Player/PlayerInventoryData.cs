@@ -22,6 +22,58 @@ public class PlayerInventoryData : ScriptableObject
     public IReadOnlyList<InventorySlotData> QuickSlots { get { return quickSlots; } }
     public event Action<InventorySlotData, int> OnQuickSlotChange;
 
+    #region Save & Load
+    [System.NonSerialized] public ItemDatabase itemDatabase;
+
+    public void LoadDataFromSave(GameSaveData data)
+    {
+        if (itemDatabase == null)
+        {
+            return;
+        }
+
+        // 1. 골드 복원
+        this.gold = data.gold;
+        OnGoldChange?.Invoke();
+
+        // 2. 메인 인벤토리 복원 (Hydration)
+        mainInventory.Clear();
+        foreach (SavedSlotData savedSlot in data.mainInventory)
+        {
+            ItemData itemTemplate = itemDatabase.GetItemByName(savedSlot.itemName);
+            if (itemTemplate != null)
+            {
+                mainInventory.Add(new InventorySlotData(itemTemplate, savedSlot.itemCount));
+            }
+        }
+        OnMainInventoryChange?.Invoke();
+
+        // 3. 퀵슬롯 복원 (Hydration)
+        for (int i = 0; i < quickSlots.Length; i++)
+        {
+            SavedSlotData savedSlot = data.quickSlots[i];
+            if (savedSlot != null && !string.IsNullOrEmpty(savedSlot.itemName))
+            {
+                ItemData itemTemplate = itemDatabase.GetItemByName(savedSlot.itemName);
+                if (itemTemplate != null)
+                {
+                    quickSlots[i] = new InventorySlotData(itemTemplate, savedSlot.itemCount);
+                }
+                else
+                {
+                    quickSlots[i] = null;
+                }
+            }
+            else
+            {
+                quickSlots[i] = null;
+            }
+            OnQuickSlotChange?.Invoke(quickSlots[i], i);
+        }
+    }
+    #endregion
+
+
     //데이터 수정(매니저로만 호출)
     public bool ModifyGold(int amount)
     {

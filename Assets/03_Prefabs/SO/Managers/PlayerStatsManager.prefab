@@ -55,4 +55,5 @@ MonoBehaviour:
   onGameOver: {fileID: 11400000, guid: 7fdbd8c670750164f9e6a09f97929b6e, type: 2}
   onTimeSlowTrappedRequest: {fileID: 11400000, guid: 039b007a56492f54d92cdcdf0eafae13, type: 2}
   onTimeSlowExit: {fileID: 11400000, guid: 7635e38153f7c2c4e8a169323c3a5251, type: 2}
+  onDistanceCheckPerCool: {fileID: 11400000, guid: 45c8ae20533923247b1389c6b8535885, type: 2}
   onPlayerDie: {fileID: 11400000, guid: a153982e656b7de4582317686fdc8e2f, type: 2}

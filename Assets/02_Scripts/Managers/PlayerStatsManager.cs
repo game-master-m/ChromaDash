@@ -22,7 +22,8 @@ public class PlayerStatsManager : MonoBehaviour
     //TimeSlowTrap관련
     [SerializeField] private FloatEventChannelSO onTimeSlowTrappedRequest;  //PlayerController 가 발행
     [SerializeField] private VoidEventChannelSO onTimeSlowExit;             //TimeSlowTrap 이 발행
-
+    //score 관련
+    [SerializeField] private FloatEventChannelSO onDistanceCheckPerCool;    //PlayerController 가 발행
     [Header("발행할 채널")]
     [SerializeField] private VoidEventChannelSO onPlayerDie;        //GameManager 가 구독
 
@@ -49,6 +50,8 @@ public class PlayerStatsManager : MonoBehaviour
         onTimeSlowExit.OnEvent += HandleTimeSlowTrapEscape;
         onTimeSlowTrappedRequest.OnEvent += HandleTimeSlowTrapped;
         onChromaDashSuccess.OnEvent += HandleTimeSlowTrapEscape;
+        //score 관련
+        onDistanceCheckPerCool.OnEvent += HandleDistanceCheckForUpdateScore;
     }
     private void OnDisable()
     {
@@ -61,6 +64,11 @@ public class PlayerStatsManager : MonoBehaviour
         onTimeSlowTrappedRequest.OnEvent -= HandleTimeSlowTrapped;
         onTimeSlowExit.OnEvent -= HandleTimeSlowTrapEscape;
         onChromaDashSuccess.OnEvent -= HandleTimeSlowTrapEscape;
+        onDistanceCheckPerCool.OnEvent -= HandleDistanceCheckForUpdateScore;
+    }
+    private void HandleDistanceCheckForUpdateScore(float distance)
+    {
+        playerStatsData.UpdateScore(Mathf.RoundToInt(distance / 10));
     }
     private void HandleTimeSlowTrapped(float slowFactor)
     {
@@ -88,6 +96,7 @@ public class PlayerStatsManager : MonoBehaviour
     public void HandleGameOver()
     {
         isPlaying = false;
+        playerStatsData.GameOverScore();
     }
 
     private void HandleSuccessReward(float amount)
@@ -103,13 +112,13 @@ public class PlayerStatsManager : MonoBehaviour
         playerStatsData.ChangeColor(color);
     }
 
-    IEnumerator UpdateGaugeCoolCo(float deltTime)
+    IEnumerator UpdateGaugeCoolCo(float coolTime)
     {
         while (isPlaying)
         {
-            if (isRealTimeGuageDecrease) yield return new WaitForSecondsRealtime(deltTime);
-            else yield return new WaitForSeconds(deltTime);
-            bool isTimesUp = playerStatsData.UpdataGauge(gaugeCostPerSec * deltTime);
+            if (isRealTimeGuageDecrease) yield return new WaitForSecondsRealtime(coolTime);
+            else yield return new WaitForSeconds(coolTime);
+            bool isTimesUp = playerStatsData.UpdataGauge(gaugeCostPerSec * coolTime);
             if (isTimesUp)
             {
                 isPlaying = false;
@@ -117,4 +126,5 @@ public class PlayerStatsManager : MonoBehaviour
             }
         }
     }
+
 }

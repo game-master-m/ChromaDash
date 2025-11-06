@@ -7,6 +7,7 @@ public static class AnimHash
     public static readonly int jumpOnGroundHash = Animator.StringToHash("JumpOnGround");
     public static readonly int airIdleHash = Animator.StringToHash("AirIdle");
     public static readonly int hurtHash = Animator.StringToHash("Hurt");
+    public static readonly int deadHash = Animator.StringToHash("Dead");
 
 
     //Trigger name
