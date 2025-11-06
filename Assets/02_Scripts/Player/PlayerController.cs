@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Xml;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -18,6 +19,7 @@ public class PlayerController : MonoBehaviour
     private ReadyChromaDashState readyChromaDashState;
     private ChromaDashState chromaDashState;
     private HurtState hurtState;
+    private DeadState deadState;
     //input
     public InputManager Input { get; private set; }
 
@@ -50,6 +52,17 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private FloatEventChannelSO onTimeSlowTrappedRequest;          //PlayerStatsManager에서 구독
     [SerializeField] private EChromaColorEventChannelSO onChromaColorChangeRequest; //PlayerStatsManager에서 구독
     [SerializeField] private VoidEventChannelSO onJumpSuccess;                      //ChromaBoostFeedback에서 구독, JumpInAirState에서 발행
+    [SerializeField] private FloatEventChannelSO onDistanceCheckPerCool;            //PlayerStatsManager에서 구독
+    [SerializeField] private VoidEventChannelSO onPlayerDie;                         //GameManager에서 구독
+
+    [Header("스코어 관련")]
+    [SerializeField] private float distanceCheckCoolTime = 1.0f; //몇 초마다 거리 체크해서 스코어 올릴지
+
+    [Header("죽음 관련")]
+    [SerializeField] private float deathYPosition = -35.0f;
+    [SerializeField] private CapsuleCollider2D upCollider;  //살아있을 때 활성화
+    [SerializeField] private CapsuleCollider2D downCollider;  //죽었을 때 활성화
+    [SerializeField] private float dieTransitionTValue = 1.0f;
 
     [Header("이벤트 구독")]
     [SerializeField] private VoidEventChannelSO onColorForcedChangeLeft;        //ColorChangeTrap에서 발행
@@ -58,6 +71,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private VoidEventChannelSO onTimeSlowExit;                 //TimeSlowTrap에서 발행
     [SerializeField] private VoidEventChannelSO onGamePause;                     //GameManager에서 발행
     [SerializeField] private VoidEventChannelSO onGameResume;                    //GameManager에서 발행
+    [SerializeField] private VoidEventChannelSO onGameOver;                    //GameManager에서 발행
     //인스펙터 조절변수 Getter
     public VoidEventChannelSO OnJumpSuccess { get { return onJumpSuccess; } }
     public FloatEventChannelSO OnPenaltyWhenNoColorMatch { get { return onPenaltyWhenNoColorMatch; } }
@@ -91,6 +105,7 @@ public class PlayerController : MonoBehaviour
 
     //GameManager 관련
     private bool isGamePaused = false;
+    private bool isGameOver = false;
     private void Awake()
     {
         //컴포넌트
@@ -110,16 +125,25 @@ public class PlayerController : MonoBehaviour
         readyChromaDashState = new ReadyChromaDashState(this, airState);
         chromaDashState = new ChromaDashState(this);
         hurtState = new HurtState(this);
+        deadState = new DeadState(this);
 
         AddTransitions();
-
-        //
     }
     private void Start()
     {
         Input = Managers.Input;
         StateMachine.ChangeState(airState);
 
+        //score 관련
+        StartCoroutine(CheckDistanceRunXCo());  //오브젝트가 살아있는 한 계속실행(distanceCheckCoolTime마다)
+
+        //죽음 관련
+        upCollider.enabled = true;
+        downCollider.enabled = false;
+    }
+    private void OnEnable()
+    {
+        isGameOver = false;
         //이벤트 구독
         onColorForcedChangeLeft.OnEvent += ChangeColorAsKeyLeft;
         onColorForcedChangeRight.OnEvent += ChangeColorAsKeyRight;
@@ -127,15 +151,17 @@ public class PlayerController : MonoBehaviour
         onTimeSlowExit.OnEvent += OnTimeSlowExit;
         onGamePause.OnEvent += () => { isGamePaused = true; };
         onGameResume.OnEvent += () => { isGamePaused = false; };
+        onGameOver.OnEvent += onGameOverControl;
     }
-    private void OnDestroy()
+    private void OnDisable()
     {
         onColorForcedChangeLeft.OnEvent -= ChangeColorAsKeyLeft;
         onColorForcedChangeRight.OnEvent -= ChangeColorAsKeyRight;
         onTimeSlowEnter.OnEvent -= OnTimeSlowEnter;
         onTimeSlowExit.OnEvent -= OnTimeSlowExit;
         onGamePause.OnEvent -= () => { isGamePaused = true; };
-        onGameResume.OnEvent += () => { isGamePaused = false; };
+        onGameResume.OnEvent -= () => { isGamePaused = false; };
+        onGameOver.OnEvent -= onGameOverControl;
     }
     void Update()
     {
@@ -149,12 +175,18 @@ public class PlayerController : MonoBehaviour
 
 
         //test용 reLoad
-        if (Input.IsReLoadPressed) SceneManager.LoadScene("PlayScene");
+        if (Input.IsReLoadPressed) Managers.Game.LoadPlayScene();
     }
     private void FixedUpdate()
     {
         StateMachine.FixedUpdate();
         RunSpeedControl();
+    }
+    private void onGameOverControl()
+    {
+        isGameOver = true;
+        upCollider.enabled = false;
+        downCollider.enabled = true;
     }
     #region Transition Method
     private void AddTransitions()
@@ -181,7 +213,10 @@ public class PlayerController : MonoBehaviour
 
         //Any
         StateMachine.AddAnyTransition(hurtState,
-            () => IsDelayedGround && ECurrentColor != EDetectedColorFromSeg && !(StateMachine.CurrentState is HurtState));
+            () => IsDelayedGround && ECurrentColor != EDetectedColorFromSeg
+            && !(StateMachine.CurrentState is HurtState) && !(StateMachine.CurrentState is DeadState));
+
+        StateMachine.AddAnyTransition(deadState, () => isGameOver && !(StateMachine.CurrentState is DeadState));
     }
     public bool DoChangeStateJumpOnGroundToJump()
     {
@@ -222,12 +257,16 @@ public class PlayerController : MonoBehaviour
     #endregion
     private void RunSpeedControl()
     {
-        if (hurtState.IsHurtSlow)
+        if (isGameOver)
+        {
+            Move.VelocityXLerpEaseIn(Move.GetVelocityX(), 0.0f, dieTransitionTValue * Time.fixedDeltaTime);
+        }
+        if (hurtState.IsHurtSlow && !isGameOver)
         {
             Move.VelocityXLerpEaseIn(Move.GetVelocityX(), runSpeed, hurtToRunTransitionTValue * Time.fixedDeltaTime);
             if (Move.GetVelocityX() > runSpeed - 0.1f) hurtState.IsHurtSlow = false;
         }
-        else
+        else if (!isGameOver)
         {
             if (!IsChromaDash)
             {
@@ -400,4 +439,21 @@ public class PlayerController : MonoBehaviour
         }
     }
     #endregion
+
+    private IEnumerator CheckDistanceRunXCo()
+    {
+        while (true)
+        {
+            if (!isGamePaused)
+            {
+                yield return new WaitForSeconds(distanceCheckCoolTime / 2);
+                onDistanceCheckPerCool.Raised(transform.position.x);
+                if (transform.position.y < deathYPosition)
+                {
+                    onPlayerDie.Raised();
+                }
+            }
+            yield return new WaitForSeconds(distanceCheckCoolTime / 2);
+        }
+    }
 }

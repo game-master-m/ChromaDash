@@ -13,17 +13,32 @@ public class PlayerStatsData : ScriptableObject
     public EChromaColor CurrentChromaColor { get; private set; } = EChromaColor.Red;
     public bool IsTimesUp { get; private set; } = false;
 
+    //score 관련
+    public int CurrentScore { get; private set; } = 0;
+    public int BestScore { get; private set; }
+
     //게이지 변경 이벤트 UI가 구독
     public event Action<float, float> onTimeGaugeChange;
     public event Action<EChromaColor> onChromaColorChange;
 
+    //Score 변경 이벤트 UI가 구독
+    public event Action onScoreChange; //계속 보여주는 score UI
+    public event Action onGameOverScoreChange;    //게임오버 시 한 번 보여주는 score UI
+
+    public void LoadDataFromSave(GameSaveData data)
+    {
+        this.BestScore = data.bestScore;
+    }
+
     public void Init()
     {
         CurrentGauge = maxGauge;
+        CurrentScore = 0;
         IsTimesUp = false;
         ChangeColor(EChromaColor.Red);
 
         onTimeGaugeChange?.Invoke(CurrentGauge, maxGauge);
+        onScoreChange?.Invoke();
     }
     public bool UpdataGauge(float costPerSec)
     {
@@ -61,5 +76,20 @@ public class PlayerStatsData : ScriptableObject
         CurrentGauge += amount;
         if (CurrentGauge > maxGauge) CurrentGauge = maxGauge;
         onTimeGaugeChange?.Invoke(CurrentGauge, maxGauge);
+    }
+
+    public void UpdateScore(int amount)
+    {
+        CurrentScore = amount;
+        onScoreChange?.Invoke();
+    }
+    public void GameOverScore()
+    {
+        if (CurrentScore > BestScore)
+        {
+            BestScore = CurrentScore;
+        }
+        onGameOverScoreChange?.Invoke();
+        //BestScore 저장 -> 게임 종료 시 DataManager 통해 저장
     }
 }

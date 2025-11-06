@@ -17,7 +17,7 @@ public class EscUI : MonoBehaviour
     [SerializeField] private Button goToLobbyButton;
     [SerializeField] private Button showSettingButton;
     [SerializeField] private Button quitButton;
-    [SerializeField] private Button resumeButton;
+    [SerializeField] private Button retryButton;
     private void Awake()
     {
         escButton.onClick.RemoveAllListeners();
@@ -29,8 +29,8 @@ public class EscUI : MonoBehaviour
         quitButton.onClick.RemoveAllListeners();
         quitButton.onClick.AddListener(() => { Application.Quit(); });
 
-        resumeButton.onClick.RemoveAllListeners();
-        resumeButton.onClick.AddListener(OnClickEscButton);
+        retryButton.onClick.RemoveAllListeners();
+        retryButton.onClick.AddListener(OnClickRetryButton);
 
         rootEscPannel.gameObject.SetActive(false);
     }
@@ -45,7 +45,10 @@ public class EscUI : MonoBehaviour
         onGamePause.OnEvent -= HandleOnGamePause;
         onGameResume.OnEvent -= HandleOnGameResume;
     }
-
+    private void OnClickRetryButton()
+    {
+        Managers.Game.LoadPlayScene();
+    }
     private void OnClickEscButton()
     {
         onPauseRequest.Raised();
