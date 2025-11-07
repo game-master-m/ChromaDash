@@ -8,9 +8,13 @@ public class MediumStrategy : BasePathStrategy
         {
             return GetSegmentFromList(themeData.rhythmMediumSegments);
         }
-        if (Random.value < 0.5f && themeData.coinMediumSegments.Count > 0)
+        if (Random.value < 0.15f && themeData.coinMediumSegments.Count > 0)
         {
             return GetSegmentFromList(themeData.coinMediumSegments);
+        }
+        if (Random.value < 0.2f && themeData.trapMediumSegments.Count > 0)
+        {
+            return GetSegmentFromList(themeData.trapMediumSegments);
         }
         return GetSegmentFromList(themeData.mediumSegments);
     }

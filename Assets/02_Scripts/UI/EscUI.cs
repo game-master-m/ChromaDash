@@ -18,6 +18,8 @@ public class EscUI : MonoBehaviour
     [SerializeField] private Button showSettingButton;
     [SerializeField] private Button quitButton;
     [SerializeField] private Button retryButton;
+
+    [SerializeField] private GameObject settingPannel;
     private void Awake()
     {
         escButton.onClick.RemoveAllListeners();
@@ -32,9 +34,21 @@ public class EscUI : MonoBehaviour
         retryButton.onClick.RemoveAllListeners();
         retryButton.onClick.AddListener(OnClickRetryButton);
 
+        showSettingButton.onClick.RemoveAllListeners();
+        showSettingButton.onClick.AddListener(() =>
+        {
+            settingPannel.SetActive(true);
+            rootEscPannel.gameObject.SetActive(false);
+        });
+
+
         rootEscPannel.gameObject.SetActive(false);
     }
-
+    public void OnClickReturnEscPannel()
+    {
+        rootEscPannel.gameObject.SetActive(true);
+        settingPannel.SetActive(false);
+    }
     private void OnEnable()
     {
         onGamePause.OnEvent += HandleOnGamePause;
@@ -57,6 +71,7 @@ public class EscUI : MonoBehaviour
     {
         //패널 보여주기
         rootEscPannel.gameObject.SetActive(true);
+        settingPannel.SetActive(false);
         //색상 변화?
         Color escIconColor = escImage.color;
         escImage.color = new Color(escIconColor.r, escIconColor.g, escIconColor.b, 0.5f);
@@ -65,6 +80,7 @@ public class EscUI : MonoBehaviour
     {
         //패널 닫기
         rootEscPannel.gameObject.SetActive(false);
+        settingPannel.SetActive(false);
         //색상 원래대로
         Color escIconColor = escImage.color;
         escImage.color = new Color(escIconColor.r, escIconColor.g, escIconColor.b, 1.0f);

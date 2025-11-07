@@ -202,7 +202,7 @@ public class InventoryUI : MonoBehaviour
     private void OnClickedAddCountButton()
     {
         if (!int.TryParse(sellCountInputText.text, out int sellCount)) return;
-
+        Managers.Sound.PlaySFX(ESfxName.ItemClick);
         if (sellCount < selectedItemInstance.itemCount) sellCount++;
         sellCountInputText.text = sellCount.ToString();
 
@@ -213,6 +213,7 @@ public class InventoryUI : MonoBehaviour
         {
             if (sellCount > 1) sellCount--;
         }
+        Managers.Sound.PlaySFX(ESfxName.ItemClick);
         sellCountInputText.text = sellCount.ToString();
     }
     private void RefreshSingleQuickSlot(InventorySlotData slotData, int index)
@@ -270,7 +271,6 @@ public class InventoryUI : MonoBehaviour
 
         RefreshMisc(true);
         RefreshAllQuickSlots();
-        Debug.Log($"¼¿·ºÆ®! {slotData.itemTemplate.itemName}");
         //È¿°ú?
     }
     private void OnSellItem(InventorySlotData slotData, int sellCount)

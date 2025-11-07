@@ -79,6 +79,7 @@ public class CoinPrefab : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             gameObject.SetActive(false);
+            Managers.Sound.PlaySFX(ESfxName.Coin);
             //코인 점수 로직 추가
             onGetGold.Raised(coinValue);
         }

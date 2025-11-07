@@ -51,7 +51,7 @@ public class InventoryManager : MonoBehaviour
             //구매 실패
             return;
         }
-
+        Managers.Sound.PlaySFX(ESfxName.SellBtn);
         playerData.ModifyGold(-itemFromShop.buyPrice);
 
         playerData.AddItemToMainInventory(itemFromShop, 1);
@@ -63,9 +63,9 @@ public class InventoryManager : MonoBehaviour
         if (sellCount > slotToSell.itemCount) return;
 
         int sellTotal = slotToSell.itemTemplate.sellPrice * sellCount;
-        //수정 중
         slotToSell.itemCount -= sellCount;
         playerData.ModifyGold(sellTotal);
+        Managers.Sound.PlaySFX(ESfxName.SellBtn);
         if (slotToSell.itemCount <= 0) playerData.RemoveItemFromInventory(slotToSell);
         else playerData.NotifyMainInventoryChange();
     }
@@ -82,6 +82,8 @@ public class InventoryManager : MonoBehaviour
         }
         int itemQuickSlotMax = itemTemplate.maxQuickSlotStack;
         InventorySlotData quickSlotItem = playerData.QuickSlots[index];
+
+        Managers.Sound.PlaySFX(ESfxName.Equip);
 
         if (quickSlotItem == null || quickSlotItem.itemTemplate == null)
         {
@@ -153,6 +155,8 @@ public class InventoryManager : MonoBehaviour
     {
         InventorySlotData slotToUnEquipFromQuickSlot = playerData.QuickSlots[index];
         if (slotToUnEquipFromQuickSlot == null) return;
+
+        Managers.Sound.PlaySFX(ESfxName.Equip);
 
         playerData.AssignToQuickSlot(null, index);
 

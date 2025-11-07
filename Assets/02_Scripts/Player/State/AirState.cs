@@ -8,7 +8,6 @@ public class AirState : PlayerState
     {
         base.Enter();
         player.ChromaDashCheck();
-        Debug.Log("Air State Enter");
         player.Anim.CrossFade(AnimHash.airIdleHash, 0.2f);
     }
     public override void Update()

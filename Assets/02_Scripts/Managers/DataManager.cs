@@ -29,6 +29,7 @@ public class DataManager : MonoBehaviour
         }
     }
 
+    //Managers Awake()에서 Init() 호출
     public void Init()
     {
         InitializeSystems();

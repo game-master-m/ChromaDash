@@ -12,7 +12,7 @@ public class HurtState : PlayerState
     public override void Enter()
     {
         base.Enter();
-        Debug.Log("Hurt State Enter");
+        Managers.Sound.PlaySFX(ESfxName.Hurt);
         player.Anim.CrossFade(AnimHash.hurtHash, 0.1f);
         player.Move.SetVelocityX(player.HurtSlowSpeed);
         IsHurtSlow = true;

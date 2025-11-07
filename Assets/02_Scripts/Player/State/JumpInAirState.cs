@@ -19,8 +19,8 @@ public class JumpInAirState : PlayerState
     private float velocityRateWhenJumpPressingEnd = 0.85f;
     public override void Enter()
     {
-        Debug.Log("jumped In Air State Enter");
         base.Enter();
+        Managers.Sound.PlaySFX(ESfxName.Jump);
         player.Anim.CrossFade(AnimHash.jumpOnGroundHash, 0.1f);
         delayForSafeCo = player.StartCoroutine(DelayForCollisionComplexCo());
         player.Move.SetVelocityY(0.0f);

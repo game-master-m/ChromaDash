@@ -45,6 +45,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerStatsData: {fileID: 11400000, guid: 72d5494e4e932ff42bcbfef95f7560d2, type: 2}
+  mediumModeChangeScore: 10
+  hardModeChangeScore: 20
   gaugeCostPerSec: 1
   updateGuageUIDeltaTime: 0.5
   onChromaDashSuccess: {fileID: 11400000, guid: 16f9f5cdfed52ab47a72490c422de5f6, type: 2}
@@ -56,4 +58,7 @@ MonoBehaviour:
   onTimeSlowTrappedRequest: {fileID: 11400000, guid: 039b007a56492f54d92cdcdf0eafae13, type: 2}
   onTimeSlowExit: {fileID: 11400000, guid: 7635e38153f7c2c4e8a169323c3a5251, type: 2}
   onDistanceCheckPerCool: {fileID: 11400000, guid: 45c8ae20533923247b1389c6b8535885, type: 2}
+  onBgmEnd: {fileID: 11400000, guid: 35536eafd0449ed4dba1c05ec6532ec7, type: 2}
+  onReturnToLobby: {fileID: 11400000, guid: accb85bdd844bff40a55a46001e165b9, type: 2}
   onPlayerDie: {fileID: 11400000, guid: a153982e656b7de4582317686fdc8e2f, type: 2}
+  onDifficultModeChangeRequest: {fileID: 11400000, guid: 0ae8a4bab47dfbf43992325ca54c5576, type: 2}

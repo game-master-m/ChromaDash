@@ -33,6 +33,7 @@ public class TimeSlowTrap : MonoBehaviour
     {
         hourglassRender.enabled = false;
         fastRewindRender.enabled = false;
+        Managers.Sound.PlaySFX(ESfxName.TimeSlowTrap);
         onTimeSlowTrapEnter.Raised(slowFactor);
     }
     private void OnTriggerExit2D(Collider2D collision)

@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private VoidEventChannelSO onGameResume;
     [SerializeField] private VoidEventChannelSO onGameOver;
 
+    [SerializeField] private VoidEventChannelSO onReturnToLobby;        //PlayerStatManager °¡ ±¸µ¶
 
     private bool isPause = false;
     private bool isGameOver = false;
@@ -53,11 +54,14 @@ public class GameManager : MonoBehaviour
     }
     public void LoadPlayScene()
     {
+        Managers.Sound.PlaySFX(ESfxName.SceneChange);
         Time.timeScale = 1.0f;
         SceneManager.LoadScene(playSceneName);
     }
     public void LoadLobbyScene()
     {
+        Managers.Sound.PlaySFX(ESfxName.SceneChange);
+        onReturnToLobby.Raised();
         Time.timeScale = 1.0f;
         SceneManager.LoadScene(lobbySceneName);
     }
@@ -83,6 +87,7 @@ public class GameManager : MonoBehaviour
     }
     public void HandleGameOver()
     {
+        if (isGameOver) return;
         Time.timeScale = 0.8f;
         isGameOver = true;
         onGameOver.Raised();

@@ -8,7 +8,6 @@ public class ReadyChromaDashState : PlayerState
     public int ComboBonus { get; private set; } = 0;
     public override void Enter()
     {
-        Debug.Log("Ready Chroma Dash State Enter");
         base.Enter();
         ComboBonus = 0;
     }

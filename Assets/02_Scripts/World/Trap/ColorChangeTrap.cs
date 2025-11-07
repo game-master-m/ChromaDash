@@ -42,7 +42,7 @@ public class ColorChangeTrap : MonoBehaviour
         //    return;
         //}
         //Physis2D 에서 Player 레이어와만 충돌하도록 설정
-
+        Managers.Sound.PlaySFX(ESfxName.ColorChange);
         switch (eColorChangeTrap)
         {
             case EColorChangeTrap.Right:

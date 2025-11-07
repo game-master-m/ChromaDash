@@ -5,6 +5,9 @@ public class PlayerStatsManager : MonoBehaviour
 {
     [Header("수정할 데이터")]
     [SerializeField] private PlayerStatsData playerStatsData;
+    [Header("난이도 설정")]
+    [SerializeField] private int mediumModeChangeScore = 100;
+    [SerializeField] private int hardModeChangeScore = 500;
 
     [Header("게이지 설정")]
     [SerializeField] private float gaugeCostPerSec = 1.0f;
@@ -24,8 +27,16 @@ public class PlayerStatsManager : MonoBehaviour
     [SerializeField] private VoidEventChannelSO onTimeSlowExit;             //TimeSlowTrap 이 발행
     //score 관련
     [SerializeField] private FloatEventChannelSO onDistanceCheckPerCool;    //PlayerController 가 발행
+    //sound 관련
+    [SerializeField] private VoidEventChannelSO onBgmEnd;
+    [SerializeField] private VoidEventChannelSO onReturnToLobby;        //GameManager 가 발행
+
     [Header("발행할 채널")]
     [SerializeField] private VoidEventChannelSO onPlayerDie;        //GameManager 가 구독
+    [SerializeField] private EDifficultyModeEventChannelSO onDifficultModeChangeRequest; //LevelGenerator 가 구독
+
+    //현재 난이도 저장 변수
+    private EDifficultyMode eCurrentDifficultyMode = EDifficultyMode.Easy;
 
     private bool isPlaying = false;
     private Coroutine updateGuaugeCoolCo;
@@ -52,6 +63,11 @@ public class PlayerStatsManager : MonoBehaviour
         onChromaDashSuccess.OnEvent += HandleTimeSlowTrapEscape;
         //score 관련
         onDistanceCheckPerCool.OnEvent += HandleDistanceCheckForUpdateScore;
+        playerStatsData.onScoreChange += DifficultyChange;
+        //sound 관련
+        //onBgmEnd.OnEvent += HandleBgmEnd;
+        playerStatsData.onTimeGaugeChange += BgmChangeByTimeGuage;
+        onReturnToLobby.OnEvent += HandleReturnToLobby;
     }
     private void OnDisable()
     {
@@ -65,6 +81,87 @@ public class PlayerStatsManager : MonoBehaviour
         onTimeSlowExit.OnEvent -= HandleTimeSlowTrapEscape;
         onChromaDashSuccess.OnEvent -= HandleTimeSlowTrapEscape;
         onDistanceCheckPerCool.OnEvent -= HandleDistanceCheckForUpdateScore;
+        //onBgmEnd.OnEvent -= HandleBgmEnd;
+        playerStatsData.onTimeGaugeChange -= BgmChangeByTimeGuage;
+        playerStatsData.onScoreChange -= DifficultyChange;
+        onReturnToLobby.OnEvent -= HandleReturnToLobby;
+    }
+    private void HandleReturnToLobby()
+    {
+        isPlaying = false;
+        Managers.Sound.PlayBGM(EBgmName.Lobby, true);
+        Time.timeScale = 1.0f;
+    }
+    private void DifficultyChange()
+    {
+        if (!isPlaying) return;
+        if (playerStatsData.CurrentScore < mediumModeChangeScore)
+        {
+            //easy mode
+            if (eCurrentDifficultyMode == EDifficultyMode.Easy) return;
+            eCurrentDifficultyMode = EDifficultyMode.Easy;
+            onDifficultModeChangeRequest.Rasied(eCurrentDifficultyMode);
+        }
+        else if (playerStatsData.CurrentScore >= mediumModeChangeScore && playerStatsData.CurrentScore < hardModeChangeScore)
+        {
+            //medium mode
+            if (eCurrentDifficultyMode == EDifficultyMode.Medium) return;
+            eCurrentDifficultyMode = EDifficultyMode.Medium;
+            onDifficultModeChangeRequest.Rasied(eCurrentDifficultyMode);
+        }
+        else if (playerStatsData.CurrentScore >= hardModeChangeScore)
+        {
+            //hard mode
+            if (eCurrentDifficultyMode != EDifficultyMode.Hard && eCurrentDifficultyMode != EDifficultyMode.ChromaHard)
+            {
+                eCurrentDifficultyMode = EDifficultyMode.Hard;
+                onDifficultModeChangeRequest.Rasied(eCurrentDifficultyMode);
+            }
+            //chroma hard mode
+            if (playerStatsData.BestScore > hardModeChangeScore &&
+                playerStatsData.CurrentScore > playerStatsData.BestScore)
+            {
+                if (eCurrentDifficultyMode != EDifficultyMode.ChromaHard)
+                {
+                    eCurrentDifficultyMode = EDifficultyMode.ChromaHard;
+                    onDifficultModeChangeRequest.Rasied(eCurrentDifficultyMode);
+                }
+            }
+        }
+
+    }
+    private void BgmChangeByTimeGuage(float currentGuage, float maxGuage)
+    {
+        if (!isPlaying) return;
+        if (currentGuage / maxGuage <= 0.2f && isPlaying && !playerStatsData.IsTimesUp)
+        {
+            Managers.Sound.PlayBGM(EBgmName.InGameLowGuage, false);
+        }
+        else
+        {
+            HandleBgmEnd();
+        }
+    }
+    private void HandleBgmEnd()
+    {
+        if (isPlaying && !playerStatsData.IsTimesUp)
+        {
+            switch (eCurrentDifficultyMode)
+            {
+                case EDifficultyMode.Easy:
+                    Managers.Sound.PlayBGM(EBgmName.InGameFull, false);
+                    break;
+                case EDifficultyMode.Medium:
+                    Managers.Sound.PlayBGM(EBgmName.InGameMediumGuage, false);
+                    break;
+                case EDifficultyMode.Hard:
+                    Managers.Sound.PlayBGM(EBgmName.InGameMediumGuage, false);
+                    break;
+                case EDifficultyMode.ChromaHard:
+                    Managers.Sound.PlayBGM(EBgmName.InGameLowGuage, false);
+                    break;
+            }
+        }
     }
     private void HandleDistanceCheckForUpdateScore(float distance)
     {
@@ -92,11 +189,15 @@ public class PlayerStatsManager : MonoBehaviour
         isPlaying = true;
         if (updateGuaugeCoolCo != null) StopCoroutine(updateGuaugeCoolCo);
         updateGuaugeCoolCo = StartCoroutine(UpdateGaugeCoolCo(updateGuageUIDeltaTime));
+
+        Managers.Sound.PlayBGM(EBgmName.InGameFull, false);
     }
     public void HandleGameOver()
     {
         isPlaying = false;
         playerStatsData.GameOverScore();
+
+        Managers.Sound.PlayBGM(EBgmName.InGameDie, true);
     }
 
     private void HandleSuccessReward(float amount)

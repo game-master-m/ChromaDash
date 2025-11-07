@@ -8,6 +8,7 @@ public class ChromaDashState : PlayerState
     public override void Enter()
     {
         base.Enter();
+        Managers.Sound.PlaySFX(ESfxName.ChromaBoost);
         player.IsChromaDash = true;
         player.WasJumpedOnGround = false;
         player.Move.AddForceImpulseX(player.ChromaDashForce);

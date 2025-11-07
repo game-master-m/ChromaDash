@@ -21,9 +21,6 @@ public class LevelGenerator : MonoBehaviour
     [Header("동적 사이즈 변화")]
     [SerializeField] private Vector2 randomXScaleRange = new Vector2(1.0f, 5.0f);
 
-    [Header("strategy 변경 설정")]
-    [SerializeField] private uint modeChangeCountEasyToMedium = 100;
-
     [Header("맵 Y축 제한")]
     [SerializeField] private float maxHeight = 20.0f;
     [SerializeField] private float minHeight = -6.0f;
@@ -33,6 +30,9 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField] private Vector2 mediumJumpXRange = new Vector2(3f, 5f);
     [SerializeField] private Vector2 hardJumpXRange = new Vector2(5f, 7f);
     [SerializeField] private Vector2 chromaHardJumpXRange = new Vector2(7f, 9f);
+
+    [Header("이벤트 구독")]
+    [SerializeField] private EDifficultyModeEventChannelSO onDifficultModeChangeRequest;
 
     //점유 된 그리드 저장용 
     private HashSet<Vector2Int> occupiedGridCells = new HashSet<Vector2Int>();
@@ -69,6 +69,14 @@ public class LevelGenerator : MonoBehaviour
         //2.초기 전략 설정
         currentStrategy = hardStrategy;
         SpawnStartSegment();
+    }
+    private void OnEnable()
+    {
+        onDifficultModeChangeRequest.OnEvent += ChangeStrategy;
+    }
+    private void OnDisable()
+    {
+        onDifficultModeChangeRequest.OnEvent -= ChangeStrategy;
     }
     private void InitPool()
     {
@@ -294,11 +302,25 @@ public class LevelGenerator : MonoBehaviour
 
 
     //테스트용..
-    private void UpdateStrategy()
+    private void ChangeStrategy(EDifficultyMode eChangedMode)
     {
-        if (generatedCount > modeChangeCountEasyToMedium && currentStrategy is EasyStrategy)
+        switch (eChangedMode)
         {
-            currentStrategy = mediumStrategy;
+            case EDifficultyMode.Easy:
+                currentStrategy = easyStrategy;
+                break;
+            case EDifficultyMode.Medium:
+                currentStrategy = mediumStrategy;
+                break;
+            case EDifficultyMode.Hard:
+                currentStrategy = hardStrategy;
+                break;
+            case EDifficultyMode.ChromaHard:
+                currentStrategy = rhythmFocusStrategy;
+                break;
+            default:
+                currentStrategy = mediumStrategy;
+                break;
         }
     }
 

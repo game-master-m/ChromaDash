@@ -168,6 +168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dataManagerPrefab: {fileID: 3049064649442686379, guid: a57c8c4f77458b441869e4bada468ccb, type: 3}
+  soundManagerPrefab: {fileID: 5137444885130503627, guid: e108dfba7504a3743bfbf3ec63dc797a, type: 3}
   poolManagerPrefab: {fileID: 479443267116594878, guid: b5f4d4039139de646aa724bec5194c5e, type: 3}
   inputManagerPrefab: {fileID: 1490915228444278228, guid: 281d6c25f6aeaa948be1ae095657aee2, type: 3}
   gameManagerPrefab: {fileID: 3166988296276645689, guid: f31a34282cc968a4ea2c693524812c71, type: 3}
