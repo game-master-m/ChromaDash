@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: PlayerStatsData
   m_EditorClassIdentifier: 
   maxGauge: 100
+  bestScore: 0

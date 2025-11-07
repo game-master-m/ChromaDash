@@ -108,6 +108,7 @@ public class PlayerStatsManager : MonoBehaviour
             if (eCurrentDifficultyMode == EDifficultyMode.Medium) return;
             eCurrentDifficultyMode = EDifficultyMode.Medium;
             onDifficultModeChangeRequest.Rasied(eCurrentDifficultyMode);
+            gaugeCostPerSec = 1.5f;
         }
         else if (playerStatsData.CurrentScore >= hardModeChangeScore)
         {
@@ -116,6 +117,7 @@ public class PlayerStatsManager : MonoBehaviour
             {
                 eCurrentDifficultyMode = EDifficultyMode.Hard;
                 onDifficultModeChangeRequest.Rasied(eCurrentDifficultyMode);
+                gaugeCostPerSec = 2.0f;
             }
             //chroma hard mode
             if (playerStatsData.BestScore > hardModeChangeScore &&
@@ -125,6 +127,7 @@ public class PlayerStatsManager : MonoBehaviour
                 {
                     eCurrentDifficultyMode = EDifficultyMode.ChromaHard;
                     onDifficultModeChangeRequest.Rasied(eCurrentDifficultyMode);
+                    gaugeCostPerSec = 2.5f;
                 }
             }
         }

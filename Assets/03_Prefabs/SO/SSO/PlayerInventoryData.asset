@@ -12,16 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d549124407280e445bed06d7027a58d3, type: 3}
   m_Name: PlayerInventoryData
   m_EditorClassIdentifier: 
-  gold: 10000
+  gold: 12045
   mainInventory:
-  - itemTemplate: {fileID: 11400000, guid: a92cd0643be3e7e488ff3b7fc6667fd6, type: 2}
-    itemCount: 1
   - itemTemplate: {fileID: 11400000, guid: af89958ba679ed94990a7d10f2d10857, type: 2}
+    itemCount: 9
+  - itemTemplate: {fileID: 11400000, guid: a92cd0643be3e7e488ff3b7fc6667fd6, type: 2}
     itemCount: 2
+  - itemTemplate: {fileID: 11400000, guid: 198fa160574fc4046a89a4ef92b6610b, type: 2}
+    itemCount: 2
+  - itemTemplate: {fileID: 11400000, guid: 42a4740954974c442869868a37bf190e, type: 2}
+    itemCount: 4
+  - itemTemplate: {fileID: 11400000, guid: c19feb0d6a5eb444b9439ba0d03eb7ae, type: 2}
+    itemCount: 6
+  - itemTemplate: {fileID: 11400000, guid: 1163edacc26d9b842bce788ff667000d, type: 2}
+    itemCount: 10
   quickSlots:
   - itemTemplate: {fileID: 0}
     itemCount: 0
-  - itemTemplate: {fileID: 11400000, guid: a92cd0643be3e7e488ff3b7fc6667fd6, type: 2}
-    itemCount: 1
+  - itemTemplate: {fileID: 0}
+    itemCount: 0
   - itemTemplate: {fileID: 0}
     itemCount: 0

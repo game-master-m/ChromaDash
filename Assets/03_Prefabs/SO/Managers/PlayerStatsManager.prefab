@@ -45,8 +45,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerStatsData: {fileID: 11400000, guid: 72d5494e4e932ff42bcbfef95f7560d2, type: 2}
-  mediumModeChangeScore: 10
-  hardModeChangeScore: 20
+  mediumModeChangeScore: 50
+  hardModeChangeScore: 200
   gaugeCostPerSec: 1
   updateGuageUIDeltaTime: 0.5
   onChromaDashSuccess: {fileID: 11400000, guid: 16f9f5cdfed52ab47a72490c422de5f6, type: 2}

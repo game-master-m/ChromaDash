@@ -10,12 +10,14 @@ public class PlayerStatsData : ScriptableObject
     public float MaxGauge { get { return maxGauge; } }
     public float CurrentGauge { get; private set; }
 
+    [SerializeField] private int bestScore;
+
     public EChromaColor CurrentChromaColor { get; private set; } = EChromaColor.Red;
     public bool IsTimesUp { get; private set; } = false;
 
     //score 관련
     public int CurrentScore { get; private set; } = 0;
-    public int BestScore { get; private set; }
+    public int BestScore { get { return bestScore; } private set { bestScore = value; } }
 
     //게이지 변경 이벤트 UI가 구독
     public event Action<float, float> onTimeGaugeChange;

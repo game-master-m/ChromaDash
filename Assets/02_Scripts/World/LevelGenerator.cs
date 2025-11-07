@@ -67,7 +67,7 @@ public class LevelGenerator : MonoBehaviour
         //1.풀 매니저에 등록
         InitPool();
         //2.초기 전략 설정
-        currentStrategy = hardStrategy;
+        currentStrategy = easyStrategy;
         SpawnStartSegment();
     }
     private void OnEnable()

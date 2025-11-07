@@ -323,13 +323,13 @@ MonoBehaviour:
   - eSfxName: 2
     clip: {fileID: 8300000, guid: 6c6223deff07a604393ab30ef3ad1535, type: 3}
   - eSfxName: 3
-    clip: {fileID: 8300000, guid: 3aebabd90fe82634f9026cc4b038faeb, type: 3}
+    clip: {fileID: 8300000, guid: 5039c5ffb9b03c14494d51a64559f1b7, type: 3}
   - eSfxName: 4
     clip: {fileID: 8300000, guid: 56230a15bedea5949918143a3e5e6bdb, type: 3}
   - eSfxName: 6
     clip: {fileID: 8300000, guid: 81c9503c4977b6d4eb8ac7b2ae22d68c, type: 3}
   - eSfxName: 7
-    clip: {fileID: 8300000, guid: 3669c40da780eaa4b9594520a21cb2e8, type: 3}
+    clip: {fileID: 8300000, guid: 0a1b71bfe5413f34382b9b0f3b7be824, type: 3}
   - eSfxName: 8
     clip: {fileID: 8300000, guid: 1d1ee6f986a9002469afc5df815c540c, type: 3}
   - eSfxName: 9
