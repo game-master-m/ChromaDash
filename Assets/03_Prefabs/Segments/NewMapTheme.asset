@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 734d0651a03c3e64597b7ec5176c1391, type: 3}
+  m_Name: NewMapTheme
+  m_EditorClassIdentifier: 
+  easySegments:
+  - {fileID: 1953739894404701362, guid: a742fc89b6127b44d94b5b3e6dd3b8a3, type: 3}
+  - {fileID: 316096945948482879, guid: 4808ba1207d0e454da0a02c2217e3028, type: 3}
+  - {fileID: 3087100255772531297, guid: f3f531ad362bf644e98bc8d097ea3d23, type: 3}
+  mediumSegments:
+  - {fileID: 1953739894404701362, guid: a01d6da3c58fe594daf995aca1b87993, type: 3}
+  - {fileID: 316096945948482879, guid: 034bf2b1781f9104a9a97e7009805e76, type: 3}
+  - {fileID: 3087100255772531297, guid: ce88e5e4aa6a80542b80786ed3b617ea, type: 3}
+  hardSegments:
+  - {fileID: 1953739894404701362, guid: 3204b66ad8298d74fb62b00dee334415, type: 3}
+  - {fileID: 316096945948482879, guid: 84070acfba514934ba94e74710b0a317, type: 3}
+  - {fileID: 3087100255772531297, guid: 9a22dec2600ef284b9f9ce5ab003e08b, type: 3}
+  - {fileID: 1953739894404701362, guid: 7bc95259c33262940a6a4541887fa9dc, type: 3}
+  - {fileID: 316096945948482879, guid: 215e271db63582e4ebfcf06ac4988c70, type: 3}
+  - {fileID: 3087100255772531297, guid: 6562e78b6b7449a44839e1abe09bddae, type: 3}
+  rhythmEasySegments:
+  - {fileID: 2109131070732166770, guid: 524b5a6acc27876428ab469d00906d9b, type: 3}
+  - {fileID: 2109131070732166770, guid: ae5dec1da54afba44894b80fd89bbe51, type: 3}
+  - {fileID: 2109131070732166770, guid: 2b43c9a8ebb3f11498d587b57c7735e7, type: 3}
+  rhythmMediumSegments:
+  - {fileID: 2109131070732166770, guid: b6852f6fad5a7f94f85457a32f205cb8, type: 3}
+  - {fileID: 2109131070732166770, guid: d78bcf4a37cd6624594f6bfa815263e8, type: 3}
+  - {fileID: 2109131070732166770, guid: 6e6db30aba049c8438f1663e627a60af, type: 3}
+  - {fileID: 2109131070732166770, guid: dc74676918afe9c45ad10dfe1cb8ac75, type: 3}
+  - {fileID: 2109131070732166770, guid: 5cd292d95c51afd45a8058cd7e715809, type: 3}
+  - {fileID: 2109131070732166770, guid: 2396e5d54ac00194bb52409742224880, type: 3}
+  rhythmHardSegments:
+  - {fileID: 2109131070732166770, guid: eb4d214ecd5fcbc42ae992ff759b53c7, type: 3}
+  - {fileID: 2109131070732166770, guid: abbb6cc74aadf5049981dbbd0a238db5, type: 3}
+  - {fileID: 2109131070732166770, guid: 52799887da2c6ad41a0a139d2175aa55, type: 3}
+  - {fileID: 2109131070732166770, guid: 967b9349aeb98fb41a0318bc33ad32cd, type: 3}
+  - {fileID: 2109131070732166770, guid: d804f292ad80a014b81b7df34ad104c7, type: 3}
+  - {fileID: 2109131070732166770, guid: a948cc770ffb09e439d0908ac8f8e99e, type: 3}
+  - {fileID: 2109131070732166770, guid: 5805bf824e4587f4d8e15f659fea8e64, type: 3}
+  - {fileID: 2109131070732166770, guid: f828e854b3207c347ad9861527379ab4, type: 3}
+  - {fileID: 2109131070732166770, guid: 72fd611d3b1926440a4cb8304573cfb4, type: 3}
+  - {fileID: 2109131070732166770, guid: 0829acfd0d70ce94ea8772b213636571, type: 3}
+  - {fileID: 2109131070732166770, guid: 7163aa0cb7b14c041a6395b6540d3157, type: 3}
+  - {fileID: 2109131070732166770, guid: 1ddbabf59a1b0bf479dd7d3ef4b9b348, type: 3}
+  coinEasySegments:
+  - {fileID: 5606912652258372835, guid: 3dee4060d648c4043a27be476b5c6f7c, type: 3}
+  - {fileID: 8951345075372668214, guid: 6469484d09ce76745aa3597816744827, type: 3}
+  - {fileID: 2109131070732166770, guid: 2edfbbe222937534e8f9cb5a7833cdfe, type: 3}
+  coinMediumSegments:
+  - {fileID: 2109131070732166770, guid: 187607de2ce86794fbdda74223b6c5c5, type: 3}
+  - {fileID: 2109131070732166770, guid: 13736f2e41fa6164b8cfd0ac3ac28257, type: 3}
+  - {fileID: 2109131070732166770, guid: 3014c8189f4d63c4c822ddffac369ea8, type: 3}
+  coinHardSegments:
+  - {fileID: 2109131070732166770, guid: 40d8009b05e604e489250bc9c5316dbd, type: 3}
+  - {fileID: 2109131070732166770, guid: 2b66cf2a39812644aa29c03367f8aa42, type: 3}
+  - {fileID: 2109131070732166770, guid: 5c7df2c817887994bb62063f3de9b1a1, type: 3}
+  trapEasySegments:
+  - {fileID: 2109131070732166770, guid: 288220e53a8215c42b4baf8532306064, type: 3}
+  - {fileID: 2109131070732166770, guid: ba70951b2107274429fa378becde4454, type: 3}
+  - {fileID: 2109131070732166770, guid: 3d0a588c6dc86944faadcdbc6d5191c5, type: 3}
+  trapMediumSegments:
+  - {fileID: 2109131070732166770, guid: 4149f9743c7f9c64cab464ea8b48cd0a, type: 3}
+  - {fileID: 2109131070732166770, guid: 2f2b8afb572a98741bff4e08ce762684, type: 3}
+  - {fileID: 2109131070732166770, guid: 2cdb4fd341027ca42bad31b8d14b62af, type: 3}
+  - {fileID: 2109131070732166770, guid: fec01162a7d206843bf6b3a44b1e9019, type: 3}
+  - {fileID: 2109131070732166770, guid: b5e34c3f0def5d6469e1a70d0fd51c4e, type: 3}
+  - {fileID: 2109131070732166770, guid: a2e27271e6eabd04d89a89db08f0a2f1, type: 3}
+  trapHardSegments:
+  - {fileID: 2109131070732166770, guid: a993c70b1f216224eb5df6399109d6bb, type: 3}
+  - {fileID: 2109131070732166770, guid: 3bd77c2e1b7e49941ae520309c1e6047, type: 3}
+  - {fileID: 2109131070732166770, guid: 1b876172ee861ca42976d598bf617e62, type: 3}
+  - {fileID: 2109131070732166770, guid: fb4c186302357424096e4b0b58d7bb97, type: 3}
+  - {fileID: 2109131070732166770, guid: ce13aafbba0f7e148923f6c130709c60, type: 3}
+  - {fileID: 2109131070732166770, guid: 753c7a2d48a65da4986cf44fafec5327, type: 3}
