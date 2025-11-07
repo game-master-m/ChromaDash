@@ -8,9 +8,13 @@ public class EasyStrategy : BasePathStrategy
         {
             return GetSegmentFromList(themeData.rhythmEasySegments);
         }
-        if (Random.value < 0.5f && themeData.coinEasySegments.Count > 0)
+        if (Random.value < 0.15f && themeData.coinEasySegments.Count > 0)
         {
             return GetSegmentFromList(themeData.coinEasySegments);
+        }
+        if (Random.value < 0.2f && themeData.trapEasySegments.Count > 0)
+        {
+            return GetSegmentFromList(themeData.trapEasySegments);
         }
         return GetSegmentFromList(themeData.easySegments);
     }

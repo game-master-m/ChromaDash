@@ -59,7 +59,7 @@ public class InventoryItemSlotPrefab : MonoBehaviour
     public void Select()
     {
         if (runningFadeCo != null) StopCoroutine(runningFadeCo);
-
+        Managers.Sound.PlaySFX(ESfxName.ItemClick);
         runningFadeCo = StartCoroutine(FadeHighlightCo(targetAlpha));
     }
     public void DeSelect()

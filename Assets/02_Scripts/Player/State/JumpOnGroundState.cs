@@ -18,8 +18,8 @@ public class JumpOnGroundState : PlayerState
     public bool DoChangeStateJumpOnGroundToAirIdle { get; private set; } = false;
     public override void Enter()
     {
-        Debug.Log("Jumped On Ground State Enter");
         base.Enter();
+        Managers.Sound.PlaySFX(ESfxName.Jump);
         player.WasJumpedOnGround = true;
         player.Anim.PlayAnim(AnimHash.jumpOnGroundHash);
         delayForSafeCo = player.StartCoroutine(DelayForCollisionComplexCo());

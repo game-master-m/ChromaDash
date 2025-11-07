@@ -6,8 +6,8 @@ public class GroundState : PlayerState
 
     public override void Enter()
     {
-        Debug.Log("Ground State Enter");
         base.Enter();
+        Managers.Sound.PlaySFX(ESfxName.Land);
         player.WasJumpedOnGround = false;
         player.Anim.CrossFade(AnimHash.runHash, 0.0f);
 

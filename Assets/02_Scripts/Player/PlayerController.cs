@@ -205,6 +205,7 @@ public class PlayerController : MonoBehaviour
         StateMachine.AddTransition(readyChromaDashState, chromaDashState,
             () => readyChromaDashState.CanChromaDashReady && (IsDelayedGround || IsGround || isChromaDashBetweenGroundToDelayed));
         StateMachine.AddTransition(readyChromaDashState, jumpInAirState, new Func<bool>(DoChangeStateAirToJump));
+        StateMachine.AddTransition(readyChromaDashState, airState, () => !IsInChromaDashDistance);
         StateMachine.AddTransition(chromaDashState, groundState, () => !IsChromaDash);
         StateMachine.AddTransition(chromaDashState, jumpOnGroundState, () => Input.IsJumpPressed && IsGround);
         //StateMachine.AddTransition(chromaDashState, jumpInAirState, () => Input.IsJumpPressed && !IsGround);
@@ -388,6 +389,7 @@ public class PlayerController : MonoBehaviour
             isChromaDashBetweenGroundToDelayed = true;
         }
         onChromaColorChangeRequest.Rasied(ECurrentColor);
+        Managers.Sound.PlaySFX(ESfxName.ColorChange);
     }
     private void ChangeColorAsKeyRight()
     {
@@ -412,6 +414,7 @@ public class PlayerController : MonoBehaviour
             isChromaDashBetweenGroundToDelayed = true;
         }
         onChromaColorChangeRequest.Rasied(ECurrentColor);
+        Managers.Sound.PlaySFX(ESfxName.ColorChange);
     }
     #endregion
 

@@ -7,7 +7,7 @@ public class DeadState : PlayerState
     public override void Enter()
     {
         base.Enter();
-        Debug.Log("Dead State Enter");
+        Managers.Sound.PlaySFX(ESfxName.Die);
         player.Anim.CrossFade(AnimHash.deadHash, 0.3f);
     }
 }

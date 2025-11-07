@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
 public class TimeGaugeUI : MonoBehaviour
 {
@@ -8,9 +9,13 @@ public class TimeGaugeUI : MonoBehaviour
 
     [Header("UI 컴포넌트")]
     [SerializeField] private Image currentImage;
+    [SerializeField] private Image handle;
     [SerializeField] private Sprite redSprite;
     [SerializeField] private Sprite blueSprite;
     [SerializeField] private Sprite greenSprite;
+    [SerializeField] private Sprite redHandleSprite;
+    [SerializeField] private Sprite blueHandleSprite;
+    [SerializeField] private Sprite greenHandleSprite;
     [Header("UI 컬러옵션")]
     [SerializeField] private Image leftArrow;   //color red
     [SerializeField] private Image rightArrow;  //color blue
@@ -51,6 +56,8 @@ public class TimeGaugeUI : MonoBehaviour
             return;
         }
         float ratio = current / max;
+        float handlePosX = ratio * 296.0f - 294.0f;
+        handle.rectTransform.anchoredPosition = new Vector2(handlePosX, handle.rectTransform.anchoredPosition.y);
         currentImage.fillAmount = ratio;
     }
     private void UpdateGaugeColor(EChromaColor eChromaColor)
@@ -60,24 +67,28 @@ public class TimeGaugeUI : MonoBehaviour
         {
             case EChromaColor.Red:
                 currentImage.sprite = redSprite;
+                handle.sprite = redHandleSprite;
                 middlePoint.color = redColor;
                 leftArrow.color = greenColor;
                 rightArrow.color = blueColor;
                 break;
             case EChromaColor.Blue:
                 currentImage.sprite = blueSprite;
+                handle.sprite = blueHandleSprite;
                 middlePoint.color = blueColor;
                 leftArrow.color = redColor;
                 rightArrow.color = greenColor;
                 break;
             case EChromaColor.Green:
                 currentImage.sprite = greenSprite;
+                handle.sprite = greenHandleSprite;
                 middlePoint.color = greenColor;
                 leftArrow.color = blueColor;
                 rightArrow.color = redColor;
                 break;
             default:
                 currentImage.sprite = redSprite;
+                handle.sprite = redHandleSprite;
                 middlePoint.color = redColor;
                 leftArrow.color = greenColor;
                 rightArrow.color = blueColor;

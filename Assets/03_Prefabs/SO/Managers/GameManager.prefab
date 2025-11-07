@@ -50,3 +50,4 @@ MonoBehaviour:
   onGamePause: {fileID: 11400000, guid: 37eacd0496f42a64e8842e3ef229afb1, type: 2}
   onGameResume: {fileID: 11400000, guid: 8bc48d3ebc204684b85a687c31cf4fdf, type: 2}
   onGameOver: {fileID: 11400000, guid: 7fdbd8c670750164f9e6a09f97929b6e, type: 2}
+  onReturnToLobby: {fileID: 11400000, guid: accb85bdd844bff40a55a46001e165b9, type: 2}
