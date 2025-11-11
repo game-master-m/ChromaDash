@@ -2,7 +2,7 @@
 - Project name: ChromaDash
 - Unity version: Unity 2022.3.18f1
 - Active game object:
-  - Name: DataManager
-  - Tag: Untagged
-  - Layer: Default
+  - Name: Player
+  - Tag: Player
+  - Layer: Player
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
